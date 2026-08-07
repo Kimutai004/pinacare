@@ -3,6 +3,23 @@
 @section('title', 'Products')
 
 @section('content')
+<div class="space-y-6">
+    <!-- Eco header -->
+    <div class="relative overflow-hidden rounded-2xl bg-green-700 text-white p-6 shadow-lg">
+        <div class="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10"></div>
+        <div class="relative flex items-center gap-3">
+            <div class="w-11 h-11 rounded-full bg-white/15 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-lime-300">
+                    <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold">Product Catalog</h1>
+                <p class="text-green-100 text-sm">Eco-friendly, baby-safe products built on a circular economy.</p>
+            </div>
+        </div>
+    </div>
+
 <div class="bg-white rounded-xl shadow overflow-hidden">
     <div class="px-6 py-4 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <h3 class="font-semibold text-gray-800">Products</h3>
@@ -70,5 +87,6 @@
     <div class="px-6 py-4">
         {{ $products->links() }}
     </div>
+</div>
 </div>
 @endsection

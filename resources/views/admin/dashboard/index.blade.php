@@ -4,6 +4,36 @@
 
 @section('content')
 <div class="space-y-6">
+    <!-- Eco banner -->
+    <div class="relative overflow-hidden rounded-2xl bg-green-700 text-white p-6 shadow-lg">
+        <div class="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10"></div>
+        <div class="absolute right-16 bottom-2 w-5 h-5 rounded-full bg-lime-400/40 animate-pulse"></div>
+        <div class="absolute right-40 top-4 w-3 h-3 rounded-full bg-teal-300/50 animate-pulse" style="animation-delay:0.4s"></div>
+        <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-lime-300">
+                        <path d="M11 20A7 7 0 019.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+                        <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                    </svg>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-lime-300">Sustainability Dashboard</span>
+                </div>
+                <h1 class="text-2xl font-bold">Every sale drives positive impact 🌱</h1>
+                <p class="text-green-100 text-sm mt-1">Eco-friendly, baby-safe products powering a circular economy.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 bg-white/10 rounded-xl px-3 py-2 text-sm">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4 text-lime-300"><path d="M12 22c5.5 0 9-4 9-9.5C21 5 15 2 5 2c0 8 2.5 12 7 20z"/></svg>
+                    Baby-Safe
+                </div>
+                <div class="flex items-center gap-2 bg-white/10 rounded-xl px-3 py-2 text-sm">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4 text-lime-300"><path d="M3 3v5h5M21 3v5h-5M3 21v-5h5M21 21v-5h-5M3 8a9 9 0 015-8M21 8a9 9 0 01-5 8M8 21a9 9 0 01-5-8"/></svg>
+                    Circular
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Summary Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="bg-white rounded-xl shadow p-6">
@@ -12,7 +42,11 @@
                     <p class="text-sm text-gray-500">Total Orders</p>
                     <p class="text-2xl font-bold text-gray-800">{{ number_format($totalOrders) }}</p>
                 </div>
-                <div class="p-3 bg-blue-100 rounded-lg text-2xl">🛒</div>
+                <div class="p-3 bg-blue-100 rounded-lg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                        <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                </div>
             </div>
         </div>
 
@@ -22,7 +56,12 @@
                     <p class="text-sm text-gray-500">Revenue</p>
                     <p class="text-2xl font-bold text-gray-800">KES {{ number_format($revenue, 2) }}</p>
                 </div>
-                <div class="p-3 bg-green-100 rounded-lg text-2xl">💰</div>
+                <div class="p-3 bg-green-100 rounded-lg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                        <path d="M11 20A7 7 0 019.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+                        <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                    </svg>
+                </div>
             </div>
         </div>
 
@@ -32,7 +71,11 @@
                     <p class="text-sm text-gray-500">Active Subscriptions</p>
                     <p class="text-2xl font-bold text-gray-800">{{ number_format($activeSubs) }}</p>
                 </div>
-                <div class="p-3 bg-purple-100 rounded-lg text-2xl">🔁</div>
+                <div class="p-3 bg-purple-100 rounded-lg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                        <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2L15 20"/>
+                    </svg>
+                </div>
             </div>
         </div>
 
@@ -42,7 +85,11 @@
                     <p class="text-sm text-gray-500">Low Stock Alerts</p>
                     <p class="text-2xl font-bold {{ $lowStockAlerts > 0 ? 'text-red-600' : 'text-gray-800' }}">{{ number_format($lowStockAlerts) }}</p>
                 </div>
-                <div class="p-3 bg-red-100 rounded-lg text-2xl">⚠️</div>
+                <div class="p-3 bg-red-100 rounded-lg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                        <path d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                    </svg>
+                </div>
             </div>
         </div>
     </div>

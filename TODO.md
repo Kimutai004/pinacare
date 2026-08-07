@@ -56,3 +56,9 @@
 - [x] Ran `migrate:fresh` + `db:seed` successfully
 - [x] Verified admin login works (`Hash::check('password') === true`)
 
+## Feedback Changes
+- [x] Made sidebar responsive on smaller devices with hamburger menu (off-canvas mobile drawer)
+- [x] Removed gradient colors and replaced with single solid color blend throughout admin UI
+
+
+

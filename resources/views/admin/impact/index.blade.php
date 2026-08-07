@@ -4,19 +4,53 @@
 
 @section('content')
 <div class="space-y-6">
+    <!-- Impact hero -->
+    <div class="relative overflow-hidden rounded-2xl bg-green-700 text-white p-6 shadow-lg">
+        <div class="absolute -right-10 -top-10 w-44 h-44 rounded-full bg-white/10"></div>
+        <div class="absolute left-56 bottom-0 w-3 h-3 rounded-full bg-lime-400/50 animate-pulse"></div>
+        <div class="relative flex items-center gap-4">
+            <div class="w-14 h-14 rounded-full bg-white/15 flex items-center justify-center flex-shrink-0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7 text-lime-300">
+                    <path d="M11 20A7 7 0 019.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+                    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold">Sustainability Impact</h1>
+                <p class="text-green-100 text-sm">Every product sold helps reduce waste, carbon, and supports farming communities.</p>
+            </div>
+        </div>
+    </div>
+
     @if($latest)
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div class="bg-green-50 rounded-xl p-6 text-center">
-                <p class="text-sm text-green-700">Diapers Saved</p>
-                <p class="text-3xl font-bold text-green-800">{{ number_format($latest->diapers_saved) }}</p>
+<div class="bg-green-50 rounded-xl p-6 text-center border border-green-200">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white mb-3">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                        <path d="M11 20A7 7 0 019.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+                        <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                    </svg>
+                </div>
+                <p class="text-sm text-green-700 font-medium">Diapers Saved</p>
+                <p class="text-3xl font-bold text-green-800 mt-1">{{ number_format($latest->diapers_saved) }}</p>
             </div>
-            <div class="bg-blue-50 rounded-xl p-6 text-center">
-                <p class="text-sm text-blue-700">CO₂ Reduced (kg)</p>
-                <p class="text-3xl font-bold text-blue-800">{{ number_format($latest->co2_reduced, 1) }}</p>
+<div class="bg-blue-50 rounded-xl p-6 text-center border border-blue-200">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-500 text-white mb-3">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                        <path d="M12 3v2M5.6 5.6l1.4 1.4M2 12h2M18.4 5.6l-1.4 1.4M20 12h2M17 16a5 5 0 10-10 0c0 3 2 4 5 4s5-1 5-4zM12 22v-2"/>
+                    </svg>
+                </div>
+                <p class="text-sm text-blue-700 font-medium">CO₂ Reduced (kg)</p>
+                <p class="text-3xl font-bold text-blue-800 mt-1">{{ number_format($latest->co2_reduced, 1) }}</p>
             </div>
-            <div class="bg-amber-50 rounded-xl p-6 text-center">
-                <p class="text-sm text-amber-700">Farmers Supported</p>
-                <p class="text-3xl font-bold text-amber-800">{{ number_format($latest->farmers_supported) }}</p>
+<div class="bg-amber-50 rounded-xl p-6 text-center border border-amber-200">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-amber-500 text-white mb-3">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                        <path d="M3 12h18M3 12a9 9 0 0118 0M3 12l3 6h4l-1-6M21 12l-3 6h-4l1-6M12 3v9M12 18v3"/>
+                    </svg>
+                </div>
+                <p class="text-sm text-amber-700 font-medium">Farmers Supported</p>
+                <p class="text-3xl font-bold text-amber-800 mt-1">{{ number_format($latest->farmers_supported) }}</p>
             </div>
         </div>
     @endif

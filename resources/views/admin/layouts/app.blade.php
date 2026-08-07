@@ -17,7 +17,7 @@
 <div class="flex min-h-screen">
     @include('admin.partials.sidebar')
 
-    <div class="flex-1 flex flex-col md:ml-64">
+    <div class="flex-1 flex flex-col md:ml-80 pt-14 md:pt-0">
         @include('admin.partials.topbar')
 
         <main class="flex-1 p-6">
