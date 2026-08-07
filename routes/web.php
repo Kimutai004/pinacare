@@ -10,21 +10,42 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ImpactController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\StorefrontController;
+use App\Http\Controllers\ShopController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\BlogController as PublicBlogController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// ===== Storefront (Public) =====
+Route::get('/', [StorefrontController::class, 'index'])->name('store.home');
+Route::get('/shop', [ShopController::class, 'index'])->name('store.shop');
+Route::get('/shop/{product}', [ShopController::class, 'show'])->name('store.product');
+Route::get('/about', [StorefrontController::class, 'about'])->name('store.about');
+Route::get('/impact', [StorefrontController::class, 'impact'])->name('store.impact');
+Route::get('/community', [StorefrontController::class, 'community'])->name('store.community');
+Route::get('/community/blog/{slug}', [PublicBlogController::class, 'show'])->name('store.blog');
+Route::get('/healthcare', [StorefrontController::class, 'partners'])->name('store.partners');
+Route::get('/contact', [StorefrontController::class, 'contact'])->name('store.contact');
+Route::post('/contact/newsletter', [StorefrontController::class, 'newsletter'])->name('store.newsletter');
+
+// Cart
+Route::get('/cart', [CartController::class, 'index'])->name('store.cart');
+Route::post('/cart/add', [CartController::class, 'add'])->name('store.cart.add');
+Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('store.cart.update');
+Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('store.cart.remove');
+
+// Checkout
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('store.checkout');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('store.checkout.store');
+Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('store.checkout.success');
+
 
 // ===== Admin Authentication =====
 Route::prefix('admin')->name('admin.')->group(function () {
