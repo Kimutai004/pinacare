@@ -34,11 +34,18 @@ class ProductController extends Controller
             'price'       => 'required|numeric|min:0',
             'stock'       => 'required|integer|min:0',
             'description' => 'nullable|string',
+            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'image_url'   => 'nullable|url',
             'is_active'   => 'sometimes|boolean',
         ]);
 
         $data['is_active'] = $request->boolean('is_active');
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('products', 'public');
+            $data['image_url'] = '/storage/' . $path;
+        }
+
         Product::create($data);
 
         return redirect()->route('admin.products.index')
@@ -59,11 +66,18 @@ class ProductController extends Controller
             'price'       => 'required|numeric|min:0',
             'stock'       => 'required|integer|min:0',
             'description' => 'nullable|string',
+            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'image_url'   => 'nullable|url',
             'is_active'   => 'sometimes|boolean',
         ]);
 
         $data['is_active'] = $request->boolean('is_active');
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('products', 'public');
+            $data['image_url'] = '/storage/' . $path;
+        }
+
         $product->update($data);
 
         return redirect()->route('admin.products.index')

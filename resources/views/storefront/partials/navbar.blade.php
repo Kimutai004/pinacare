@@ -16,16 +16,7 @@
         <div class="flex items-center justify-between h-16">
             <!-- Logo -->
             <a href="{{ route('store.home') }}" class="flex items-center space-x-2">
-                <div class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white shadow">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
-                        <path d="M11 20A7 7 0 019.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
-                        <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
-                    </svg>
-                </div>
-                <div>
-                    <span class="text-xl font-extrabold text-green-700 leading-none">PINACARE</span>
-                    <span class="block text-[10px] font-semibold text-green-500 uppercase tracking-widest">Eco Baby Care</span>
-                </div>
+                <img src="{{ asset('logo-green.png') }}" alt="Pinacare Logo" class="h-40 w-auto">
             </a>
 
             <!-- Desktop Nav -->

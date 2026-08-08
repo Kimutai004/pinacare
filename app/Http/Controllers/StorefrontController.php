@@ -19,8 +19,13 @@ class StorefrontController extends Controller
         $impact = ImpactMetric::latest()->first();
         $testimonials = Testimonial::where('approved', true)->with('customer')->latest()->take(3)->get();
         $posts = BlogPost::whereNotNull('published_at')->latest()->take(3)->get();
+        $productsByCat = [
+            'diaper' => Product::where('is_active', true)->where('category', 'diaper')->count(),
+            'wipe' => Product::where('is_active', true)->where('category', 'wipe')->count(),
+            'bundle' => Product::where('is_active', true)->where('category', 'bundle')->count(),
+        ];
 
-        return view('storefront.index', compact('featuredProducts', 'impact', 'testimonials', 'posts'));
+        return view('storefront.index', compact('featuredProducts', 'impact', 'testimonials', 'posts', 'productsByCat'));
     }
 
     /**
@@ -76,7 +81,7 @@ class StorefrontController extends Controller
     {
         $request->validate(['email' => 'required|email']);
 
-        return back()->with('success', 'Thank you for subscribing to the PINACARE newsletter! 🌱');
+return back()->with('success', 'Thank you for subscribing to the PINACARE newsletter!');
     }
 }
 

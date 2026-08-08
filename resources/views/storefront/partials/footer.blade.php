@@ -74,7 +74,11 @@
 
         <div class="border-t border-green-800 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-green-300 gap-3">
             <p>&copy; {{ date('Y') }} PINACARE. All rights reserved.</p>
-            <p class="flex items-center gap-1">🌱 Made with love for a sustainable future 🌍</p>
+            <p class="flex items-center gap-2">
+                <span class="text-green-300">@include('storefront.partials.icons', ['icon' => 'leaf', 'class' => 'w-4 h-4'])</span>
+                Made with love for a sustainable future
+                <span class="text-green-300">@include('storefront.partials.icons', ['icon' => 'globe', 'class' => 'w-4 h-4'])</span>
+            </p>
         </div>
     </div>
 </footer>

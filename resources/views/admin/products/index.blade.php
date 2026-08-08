@@ -43,7 +43,7 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Name</th>
+<th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Product</th>
                     <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Category</th>
                     <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Size</th>
                     <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Price</th>
@@ -55,7 +55,16 @@
             <tbody class="divide-y divide-gray-200">
                 @forelse($products as $product)
                     <tr>
-                        <td class="px-6 py-4 text-sm text-gray-700">{{ $product->name }}</td>
+<td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                @if($product->image_url)
+                                    <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" class="w-11 h-11 rounded-lg object-cover border border-gray-200">
+                                @else
+                                    <span class="w-11 h-11 rounded-lg bg-green-50 text-green-600 flex items-center justify-center text-sm font-bold">{{ strtoupper(substr($product->name, 0, 1)) }}</span>
+                                @endif
+                                <span class="text-sm text-gray-700">{{ $product->name }}</span>
+                            </div>
+                        </td>
                         <td class="px-6 py-4 text-sm text-gray-700">{{ ucfirst($product->category) }}</td>
                         <td class="px-6 py-4 text-sm text-gray-700">{{ $product->size ?? '—' }}</td>
                         <td class="px-6 py-4 text-sm text-gray-700">KES {{ number_format($product->price, 2) }}</td>

@@ -11,25 +11,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Nunito', sans-serif; }
-        .loader-hidden { opacity: 0; visibility: hidden; transition: opacity 0.5s ease; }
+        .loader-hidden { opacity: 0; visibility: hidden; transition: opacity 30s ease; }
         @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-        .float { animation: float 3s ease-in-out infinite; }
+        .float { animation: float 30s ease-in-out infinite; }
         @keyframes spin-slow { to { transform: rotate(360deg); } }
         .spin-slow { animation: spin-slow 2.5s linear infinite; }
     </style>
 </head>
-<body class="bg-cream-50 bg-[#faf8f3] text-gray-800 antialiased">
+<body class="bg-green-50 bg-[#faf8f3] text-gray-800 antialiased">
 
     <!-- ===== Full-page Loader ===== -->
-    <div id="pageLoader" class="fixed inset-0 z-[100] bg-[#eaf7ef] flex flex-col items-center justify-center space-y-5">
+    <div id="pageLoader" class="fixed inset-0 z-[100] bg-green-800 flex flex-col items-center justify-center space-y-5">
         <div class="relative w-24 h-24 float">
             <div class="absolute inset-0 rounded-full border-4 border-green-200"></div>
             <div class="absolute inset-0 rounded-full border-4 border-t-green-600 border-green-200 spin-slow"></div>
-            <div class="absolute inset-0 flex items-center justify-center text-4xl">🌱</div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <img src="{{ asset('logo.png') }}" alt="PINACARE Logo" class="w-32 h-auto mx-auto mb-2">
+            </div>
         </div>
         <div class="text-center">
-            <h1 class="text-2xl font-extrabold text-green-700 tracking-tight">PINACARE</h1>
-            <p class="text-sm text-green-600 mt-1">Growing a greener tomorrow for your baby…</p>
+            <p class="text-sm text-white mt-1">Where Sustainability Meets Baby Care</p>
         </div>
         <div class="w-48 h-1.5 bg-green-100 rounded-full overflow-hidden">
             <div class="h-full bg-green-500 rounded-full progress-bar" style="width:0%"></div>
