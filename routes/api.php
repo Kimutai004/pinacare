@@ -2,6 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
