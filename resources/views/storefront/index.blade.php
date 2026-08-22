@@ -7,13 +7,18 @@
 ============================================================= --}}
 <section class="relative min-h-screen flex items-center overflow-hidden bg-[#0b3d2e]">
     {{-- Layered background --}}
-    <div class="absolute inset-0">
-        <img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Eco baby care" class="w-full h-full object-cover opacity-30">
-        <div class="absolute inset-0 bg-gradient-to-br from-[#0b3d2e] via-[#0d4a36] to-[#127a52]"></div>
-        {{-- Decorative blobs --}}
-        <div class="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full bg-green-400/20 blur-3xl"></div>
-        <div class="absolute bottom-0 -left-24 w-[360px] h-[360px] rounded-full bg-emerald-300/10 blur-3xl"></div>
-    </div>
+<div class="absolute inset-0">
+    <img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
+         alt="Eco baby care"
+         class="w-full h-full object-cover opacity-30">
+
+    {{-- Dark Forest Green Overlay --}}
+    <div class="absolute inset-0 bg-gradient-to-br from-[#062e12] via-[#0b4a1b] to-[#145a20]"></div>
+
+    {{-- Decorative blobs --}}
+    <div class="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full bg-[#1f7a2e]/20 blur-3xl"></div>
+    <div class="absolute bottom-0 -left-24 w-[360px] h-[360px] rounded-full bg-[#3f9142]/10 blur-3xl"></div>
+</div>
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24 w-full">
         <div class="grid lg:grid-cols-2 gap-14 items-center">
@@ -59,33 +64,67 @@
 
             {{-- Right: floating product visual --}}
             <div class="relative hidden lg:block">
-                <div class="relative mx-auto w-80 h-80 md:w-96 md:h-96">
-                    {{-- Glow ring --}}
-                    <div class="absolute inset-0 rounded-full bg-green-400/20 blur-2xl"></div>
-                    <div class="absolute inset-6 rounded-full border-2 border-dashed border-green-300/40 animate-spin-slow"></div>
-                    <div class="absolute inset-0 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center shadow-2xl">
-                        @if($featuredProducts->count())
-                            <div class="text-center">
-                                @if($featuredProducts->first()->image_url)
-                                    <img src="{{ asset($featuredProducts->first()->image_url) }}" alt="{{ $featuredProducts->first()->name }}" class="w-40 h-40 rounded-2xl object-cover mx-auto shadow-lg">
-                                @else
-                                <div class="w-36 h-36 mx-auto text-green-300 float">
-                                    @include('storefront.partials.icons', ['icon' => $featuredProducts->first()->category === 'diaper' ? 'diaper' : ($featuredProducts->first()->category === 'wipe' ? 'wipe' : 'bundle'), 'class' => 'w-full h-full'])
-                                </div>
-                                @endif
-                                <p class="text-white font-extrabold mt-4 text-lg">{{ $featuredProducts->first()->name }}</p>
-                                <p class="text-green-200 text-sm mt-1">KES {{ number_format($featuredProducts->first()->price) }}</p>
-                            </div>
-                        @else
-                            <div class="text-center">
-                                <div class="w-36 h-36 mx-auto text-green-300 float">
-                                    @include('storefront.partials.icons', ['icon' => 'diaper', 'class' => 'w-full h-full'])
-                                </div>
-                                <p class="text-white font-extrabold mt-4 text-lg">PINACARE Diapers</p>
-                            </div>
-                        @endif
+                <div class="relative mx-auto w-[420px] h-[420px] md:w-[520px] md:h-[520px]">
+
+    {{-- Glow behind the circle --}}
+    <div class="absolute inset-0 rounded-full bg-green-400/30 blur-3xl"></div>
+
+    {{-- Full circular dashed path --}}
+    <div class="absolute inset-0 rounded-full border-2 border-dashed border-green-300/60 animate-spin-slow"></div>
+
+    {{-- Product image - fills the entire circle --}}
+    <div class="absolute inset-2 rounded-full overflow-hidden border-4 border-white/20 shadow-2xl">
+
+        @if($featuredProducts->count())
+
+            @if($featuredProducts->first()->image_url)
+
+                <img
+                    src="{{ asset($featuredProducts->first()->image_url) }}"
+                    alt="{{ $featuredProducts->first()->name }}"
+                    class="w-full h-full object-cover"
+                >
+
+            @else
+
+                <div class="w-full h-full flex items-center justify-center bg-green-900/40 text-green-300">
+
+                    <div class="w-48 h-48 float">
+                        @include('storefront.partials.icons', [
+                            'icon' => $featuredProducts->first()->category === 'diaper'
+                                ? 'diaper'
+                                : ($featuredProducts->first()->category === 'wipe'
+                                    ? 'wipe'
+                                    : 'bundle'),
+                            'class' => 'w-full h-full'
+                        ])
                     </div>
+
                 </div>
+
+            @endif
+
+        @else
+
+            <div class="w-full h-full flex items-center justify-center bg-green-900/40 text-green-300">
+
+                <div class="w-48 h-48 float">
+                    @include('storefront.partials.icons', [
+                        'icon' => 'diaper',
+                        'class' => 'w-full h-full'
+                    ])
+                </div>
+
+            </div>
+
+        @endif
+
+    </div>
+
+    {{-- Subtle glass overlay --}}
+    <div class="absolute inset-2 rounded-full bg-gradient-to-t from-green-950/20 via-transparent to-white/10 pointer-events-none"></div>
+
+</div>
 
                 {{-- Floating badges --}}
                 <div class="absolute top-8 -left-2 bg-white/95 backdrop-blur rounded-2xl px-4 py-3 shadow-xl flex items-center gap-3 float">
