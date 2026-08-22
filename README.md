@@ -28,7 +28,7 @@ This repository includes a `render.yaml` Blueprint and `Dockerfile` for deployin
 1. Push the repository to GitHub, including `Dockerfile`, `docker/entrypoint.sh`, and `render.yaml`.
 2. In Render, choose **New > Blueprint**, connect `Kimutai004/pinacare`, and select the `frontend` branch.
 3. Apply the Blueprint. Render will create the web service and PostgreSQL database, then run migrations during deployment.
-4. In the web service environment settings, update `APP_URL` to the actual Render URL and add any required mail, payment, or storage credentials.
+4. In the web service environment settings, set `APP_KEY` to the output of `php artisan key:generate --show`, update `APP_URL` to the actual Render URL, and add any required mail, payment, or storage credentials.
 
 Never commit `.env` or production credentials. The free Render database and web service are suitable for testing; use paid services and persistent object storage for production traffic and uploaded files.
 
