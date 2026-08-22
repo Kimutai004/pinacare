@@ -21,6 +21,17 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+## Deploying to Render
+
+This repository includes a `render.yaml` Blueprint and `Dockerfile` for deploying the Laravel site with a Render PostgreSQL database.
+
+1. Push the repository to GitHub, including `Dockerfile`, `docker/entrypoint.sh`, and `render.yaml`.
+2. In Render, choose **New > Blueprint**, connect `Kimutai004/pinacare`, and select the `frontend` branch.
+3. Apply the Blueprint. Render will create the web service and PostgreSQL database, then run migrations during deployment.
+4. In the web service environment settings, update `APP_URL` to the actual Render URL and add any required mail, payment, or storage credentials.
+
+Never commit `.env` or production credentials. The free Render database and web service are suitable for testing; use paid services and persistent object storage for production traffic and uploaded files.
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.

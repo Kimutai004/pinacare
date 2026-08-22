@@ -1,0 +1,54 @@
+services:
+  - type: web
+    name: pinacare
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    envVars:
+      - key: APP_NAME
+        value: PINACARE
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        value: https://pinacare.onrender.com
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: warning
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: pinacare-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: pinacare-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: pinacare-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: pinacare-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: pinacare-db
+          property: password
+      - key: CACHE_DRIVER
+        value: file
+      - key: SESSION_DRIVER
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+
+databases:
+  - name: pinacare-db
+    plan: free
