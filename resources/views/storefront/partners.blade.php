@@ -3,7 +3,7 @@
 
 @section('content')
 {{-- ===== 1. HERO ===== --}}
-<section class="relative overflow-hidden bg-gradient-to-br from-blue-800 via-blue-700 to-cyan-800 text-white">
+<section class="relative overflow-hidden bg-[#0b3d2e] text-white">
     <div class="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-blue-400/15 blur-3xl"></div>
     <div class="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-cyan-300/15 blur-3xl"></div>
     <div class="relative max-w-4xl mx-auto px-4 text-center py-16 md:py-20">
@@ -109,7 +109,7 @@
 </section>
 
 {{-- ===== 4. PARTNERSHIP CTA ===== --}}
-<section class="relative overflow-hidden py-16 bg-gradient-to-br from-blue-700 to-cyan-800 text-white">
+<section class="relative overflow-hidden py-16 bg-gradient-to-br from-green-700 to-green-800 text-white">
     <div class="absolute -top-10 -right-10 w-64 h-64 rounded-full bg-white/5"></div>
     <div class="absolute -bottom-10 -left-10 w-64 h-64 rounded-full bg-white/5"></div>
     <div class="relative max-w-3xl mx-auto px-4 text-center">
