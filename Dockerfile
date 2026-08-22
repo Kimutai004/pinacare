@@ -15,13 +15,15 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+RUN composer install --no-dev --no-interaction --prefer-dist --no-scripts
+
+COPY . .
+RUN composer dump-autoload --no-dev --no-interaction --optimize
 
 COPY package.json vite.config.js ./
 COPY resources ./resources
 RUN npm install && npm run build && rm -rf node_modules
 
-COPY . .
 COPY docker/entrypoint.sh /usr/local/bin/pinacare-entrypoint
 
 RUN chmod +x /usr/local/bin/pinacare-entrypoint \
