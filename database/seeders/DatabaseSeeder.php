@@ -36,16 +36,20 @@ class DatabaseSeeder extends Seeder
 
         // Products (idempotent by unique name)
         $productsData = [
-            ['name' => 'Eco Diaper Pack S', 'category' => 'diaper', 'size' => 'S', 'price' => 1200, 'stock' => 50, 'description' => 'Biodegradable diapers size S', 'image_url' => null, 'is_active' => true],
-            ['name' => 'Eco Diaper Pack M', 'category' => 'diaper', 'size' => 'M', 'price' => 1350, 'stock' => 40, 'description' => 'Biodegradable diapers size M', 'image_url' => null, 'is_active' => true],
-            ['name' => 'Eco Diaper Pack L', 'category' => 'diaper', 'size' => 'L', 'price' => 1500, 'stock' => 5, 'description' => 'Biodegradable diapers size L', 'image_url' => null, 'is_active' => true],
-            ['name' => 'Organic Wipes', 'category' => 'wipe', 'size' => null, 'price' => 450, 'stock' => 100, 'description' => 'Organic baby wipes pack', 'image_url' => null, 'is_active' => true],
-            ['name' => 'Starter Bundle', 'category' => 'bundle', 'size' => null, 'price' => 2500, 'stock' => 0, 'description' => 'Complete starter bundle', 'image_url' => null, 'is_active' => true],
+            ['name' => 'Eco Diaper Pack S', 'category' => 'diaper', 'size' => 'S', 'price' => 1200, 'stock' => 50, 'description' => 'Biodegradable diapers size S', 'image_url' => '/Small(Front View).png', 'is_active' => true],
+            ['name' => 'Eco Diaper Pack M', 'category' => 'diaper', 'size' => 'M', 'price' => 1350, 'stock' => 40, 'description' => 'Biodegradable diapers size M', 'image_url' => '/Medium (Front view).png', 'is_active' => true],
+            ['name' => 'Eco Diaper Pack L', 'category' => 'diaper', 'size' => 'L', 'price' => 1500, 'stock' => 5, 'description' => 'Biodegradable diapers size L', 'image_url' => '/Large(Front View).png', 'is_active' => true],
+            ['name' => 'Organic Wipes', 'category' => 'wipe', 'size' => null, 'price' => 450, 'stock' => 100, 'description' => 'Organic baby wipes pack', 'image_url' => '/Wipes closed.png', 'is_active' => true],
+            ['name' => 'Starter Bundle', 'category' => 'bundle', 'size' => null, 'price' => 2500, 'stock' => 0, 'description' => 'Complete starter bundle', 'image_url' => '/Single flat view.png', 'is_active' => true],
         ];
 
         $products = [];
         foreach ($productsData as $data) {
-            $products[] = Product::firstOrCreate(['name' => $data['name']], $data);
+            $product = Product::firstOrCreate(['name' => $data['name']], $data);
+            if (!$product->image_url && $data['image_url']) {
+                $product->update(['image_url' => $data['image_url']]);
+            }
+            $products[] = $product;
         }
 
         // Customer (idempotent by email)
