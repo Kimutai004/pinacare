@@ -4,6 +4,7 @@ services:
     runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile
+    # Blog page redesign - 2026-08-23
     healthCheckPath: /
     envVars:
       - key: APP_NAME
