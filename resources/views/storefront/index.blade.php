@@ -111,8 +111,8 @@
 
                 {{-- Floating badges --}}
                 <div class="absolute top-8 -left-2 bg-white/95 backdrop-blur rounded-2xl px-4 py-3 shadow-xl flex items-center gap-3 float">
-                    <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
-                        @include('storefront.partials.icons', ['icon' => 'logo', 'class' => 'w-5 h-5'])
+                    <div class="w-10 h-10 rounded-full bg-green-700 text-green-600 flex items-center justify-center">
+                        <img src="{{ asset('p-logo.png') }}" alt="PINACARE" class="w-5 h-5">
                     </div>
                     <div>
                         <p class="text-xs font-extrabold text-gray-800">Eco-Friendly</p>
