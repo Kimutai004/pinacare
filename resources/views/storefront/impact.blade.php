@@ -71,6 +71,34 @@
 </section>
 @endif
 
+{{-- ===== GLOBAL IMPACT METRICS ===== --}}
+<section class="py-20 md:py-24 bg-gradient-to-r from-green-50 to-emerald-50">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="text-center mb-14">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">Global Impact Scale</h2>
+            <p class="text-gray-600 mt-3 text-lg">Our contribution to a sustainable future</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="bg-white rounded-2xl p-8 text-center shadow-sm hover:shadow-lg transition border border-green-100">
+                <p class="text-4xl md:text-5xl font-extrabold text-green-700 mb-2">300K</p>
+                <p class="text-sm font-semibold text-gray-600">Metric Tons CO₂ Offset</p>
+            </div>
+            <div class="bg-white rounded-2xl p-8 text-center shadow-sm hover:shadow-lg transition border border-green-100">
+                <p class="text-4xl md:text-5xl font-extrabold text-green-700 mb-2">800M</p>
+                <p class="text-sm font-semibold text-gray-600">Liters Water Conserved</p>
+            </div>
+            <div class="bg-white rounded-2xl p-8 text-center shadow-sm hover:shadow-lg transition border border-green-100">
+                <p class="text-4xl md:text-5xl font-extrabold text-green-700 mb-2">6,000</p>
+                <p class="text-sm font-semibold text-gray-600">Jobs Created</p>
+            </div>
+            <div class="bg-white rounded-2xl p-8 text-center shadow-sm hover:shadow-lg transition border border-green-100">
+                <p class="text-4xl md:text-5xl font-extrabold text-green-700 mb-2">248M</p>
+                <p class="text-sm font-semibold text-gray-600">Families Reached</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 {{-- ===== 3. THREE PILLARS — Clean cards ===== --}}
 <section class="py-20 md:py-24 bg-white">
     <div class="max-w-6xl mx-auto px-4">

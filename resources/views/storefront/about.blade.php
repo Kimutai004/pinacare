@@ -33,7 +33,7 @@
                         @include('storefront.partials.icons', ['icon' => 'vision', 'class' => 'w-8 h-8'])
                     </div>
                     <h2 class="text-2xl font-extrabold text-gray-900 mt-6">Our Vision</h2>
-                    <p class="text-gray-600 mt-4 leading-relaxed text-lg">A world where every baby grows up healthy, every farmer thrives, and every diaper we use gives back to the earth instead of taking from it.</p>
+                    <p class="text-gray-600 mt-4 leading-relaxed text-lg">A circular economy future where no child's comfort comes at the cost of the planet.</p>
                     <div class="mt-6 inline-flex items-center gap-2 text-green-700 font-bold text-sm">
                         <span class="w-2 h-2 rounded-full bg-green-600"></span> Health · Prosperity · Planet
                     </div>
@@ -47,7 +47,7 @@
                         @include('storefront.partials.icons', ['icon' => 'target', 'class' => 'w-8 h-8'])
                     </div>
                     <h2 class="text-2xl font-extrabold text-gray-900 mt-6">Our Mission</h2>
-                    <p class="text-gray-600 mt-4 leading-relaxed text-lg">To create affordable, sustainable baby care products that create green jobs, empower farming communities, and reduce waste — all while keeping babies safe and comfortable.</p>
+                    <p class="text-gray-600 mt-4 leading-relaxed text-lg">To design and produce affordable, biodegradable diapers from pineapple leaf fiber that protect children's health, reduce waste and create green jobs.</p>
                     <div class="mt-6 inline-flex items-center gap-2 text-blue-700 font-bold text-sm">
                         <span class="w-2 h-2 rounded-full bg-blue-600"></span> Affordable · Sustainable · Safe
                     </div>
@@ -134,13 +134,14 @@
     <div class="max-w-5xl mx-auto px-4 text-center">
         <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">What We Stand For</h2>
         <p class="text-gray-600 mt-3 text-lg">The principles that guide every decision we make.</p>
-        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
             @php
                 $values = [
-                    ['icon' => 'leaf', 'title' => 'Sustainability', 'desc' => 'Planet-first in everything'],
+                    ['icon' => 'leaf', 'title' => 'Sustainability', 'desc' => 'Where no child\'s comfort comes at the cost of the planet.'],
                     ['icon' => 'baby', 'title' => 'Baby Safety', 'desc' => 'Gentle, pure & hypoallergenic'],
-                    ['icon' => 'farmer', 'title' => 'Fair Trade', 'desc' => 'Empowering farmer communities'],
-                    ['icon' => 'handshake', 'title' => 'Integrity', 'desc' => 'Honest, transparent products'],
+                    ['icon' => 'bulb', 'title' => 'Innovation', 'desc' => 'Pioneering sustainable solutions'],
+                    ['icon' => 'coins', 'title' => 'Affordability', 'desc' => 'Quality care for every family'],
+                    ['icon' => 'people', 'title' => 'Community Empowerment', 'desc' => 'Creating opportunities for farmers'],
                 ];
             @endphp
             @foreach($values as $value)
@@ -164,7 +165,7 @@
                 $stats = [
                     ['val' => '100%', 'label' => 'Biodegradable'],
                     ['val' => '0', 'label' => 'Harmful Chemicals'],
-                    ['val' => '350+', 'label' => 'Farmers Supported'],
+                    ['val' => '500+', 'label' => 'Farmers Supported'],
                     ['val' => '4.9★', 'label' => 'Parent Rating'],
                 ];
             @endphp

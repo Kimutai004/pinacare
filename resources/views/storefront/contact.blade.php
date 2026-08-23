@@ -42,7 +42,7 @@
                         @include('storefront.partials.icons', ['icon' => 'phone', 'class' => 'w-7 h-7'])
                     </div>
                     <h3 class="font-extrabold text-gray-800 mt-4">Phone / WhatsApp</h3>
-                    <a href="tel:+254712345678" class="text-blue-700 font-bold hover:underline mt-1 block">+254 712 345 678</a>
+                    <a href="tel:0751340591" class="text-blue-700 font-bold hover:underline mt-1 block">0751340591 / 0106365682</a>
                 </div>
             </div>
             <div class="group relative overflow-hidden bg-white rounded-3xl p-8 text-center shadow-sm border border-amber-50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">

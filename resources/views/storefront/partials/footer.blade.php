@@ -4,12 +4,7 @@
             <!-- Brand -->
             <div>
                 <div class="flex items-center space-x-2 mb-4">
-                    <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
-                            <path d="M11 20A7 7 0 019.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
-                            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
-                        </svg>
-                    </div>
+                    <img src="{{ asset('p-logo.png') }}" alt="PINACARE Logo" class="h-10 w-auto">
                     <span class="text-lg font-extrabold text-white">PINACARE</span>
                 </div>
                 <p class="text-sm text-green-200 leading-relaxed">Where sustainability meets baby care. 100% biodegradable, gentle on baby skin, and kind to the planet.</p>
@@ -62,7 +57,7 @@
                     </li>
                     <li class="flex items-center gap-2">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4 text-green-300"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
-                        +254 712 345 678
+                        0751340591/0106365682
                     </li>
                     <li class="flex items-center gap-2">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4 text-green-300"><path d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
@@ -72,12 +67,19 @@
             </div>
         </div>
 
-        <div class="border-t border-green-800 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-green-300 gap-3">
-            <p>&copy; {{ date('Y') }} PINACARE. All rights reserved.</p>
-            <p class="flex items-center gap-2">
-                <span class="text-green-300">@include('storefront.partials.icons', ['icon' => 'leaf', 'class' => 'w-4 h-4'])</span>
+        <div class="border-t border-green-800 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div class="flex flex-col sm:flex-row items-center gap-4">
+                <p class="text-xs text-green-300">&copy; {{ date('Y') }} PINACARE. All rights reserved.</p>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center gap-4">
+                <div class="h-12 w-auto">
+                    <img src="{{ asset('logo-green.png') }}" alt="Pinacare Logo" class="h-full w-auto">
+                </div>
+            </div>
+            <p class="text-xs text-green-300 flex items-center gap-2 justify-center">
+                <span>@include('storefront.partials.icons', ['icon' => 'leaf', 'class' => 'w-4 h-4'])</span>
                 Made with love for a sustainable future
-                <span class="text-green-300">@include('storefront.partials.icons', ['icon' => 'globe', 'class' => 'w-4 h-4'])</span>
+                <span>@include('storefront.partials.icons', ['icon' => 'globe', 'class' => 'w-4 h-4'])</span>
             </p>
         </div>
     </div>

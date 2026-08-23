@@ -14,7 +14,8 @@ class BlogController extends Controller
 
     public function show($slug)
     {
-        return response()->json(BlogPost::where('slug',$slug)->firstOrFail());
+        $post = BlogPost::where('slug', $slug)->firstOrFail();
+        return view('storefront.blog.show', compact('post'));
     }
 
     public function store(Request $request)

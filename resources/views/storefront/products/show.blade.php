@@ -34,18 +34,21 @@
                 @endif
             </div>
             {{-- Trust badges --}}
-            <div class="mt-4 grid grid-cols-3 gap-3">
-                <div class="text-center p-3 rounded-xl bg-white border border-green-100">
-                    <span class="w-6 h-6 text-green-600 mx-auto">@include('storefront.partials.icons', ['icon' => 'leaf', 'class' => 'w-full h-full'])</span>
-                    <p class="text-[10px] font-bold text-gray-600 mt-1">Biodegradable</p>
+            <div class="mt-8 grid grid-cols-3 gap-4">
+                <div class="flex flex-col items-center p-5 rounded-2xl bg-gradient-to-br from-green-50 to-green-100/60 border border-green-200 hover:shadow-lg hover:border-green-300 hover:scale-105 transition-all duration-300 cursor-pointer">
+                    <span class="w-10 h-10 text-green-600 mb-2">@include('storefront.partials.icons', ['icon' => 'leaf', 'class' => 'w-full h-full'])</span>
+                    <p class="text-xs font-bold text-green-700">Biodegradable</p>
+                    <p class="text-[10px] text-green-600 mt-0.5">100% Natural</p>
                 </div>
-                <div class="text-center p-3 rounded-xl bg-white border border-green-100">
-                    <span class="w-6 h-6 text-blue-600 mx-auto">@include('storefront.partials.icons', ['icon' => 'baby', 'class' => 'w-full h-full'])</span>
-                    <p class="text-[10px] font-bold text-gray-600 mt-1">Baby-Safe</p>
+                <div class="flex flex-col items-center p-5 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100/60 border border-blue-200 hover:shadow-lg hover:border-blue-300 hover:scale-105 transition-all duration-300 cursor-pointer">
+                    <span class="w-10 h-10 text-blue-600 mb-2">@include('storefront.partials.icons', ['icon' => 'baby', 'class' => 'w-full h-full'])</span>
+                    <p class="text-xs font-bold text-blue-700">Baby-Safe</p>
+                    <p class="text-[10px] text-blue-600 mt-0.5">Hypoallergenic</p>
                 </div>
-                <div class="text-center p-3 rounded-xl bg-white border border-green-100">
-                    <span class="w-6 h-6 text-amber-600 mx-auto">@include('storefront.partials.icons', ['icon' => 'recycle', 'class' => 'w-full h-full'])</span>
-                    <p class="text-[10px] font-bold text-gray-600 mt-1">Eco-Circular</p>
+                <div class="flex flex-col items-center p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100/60 border border-amber-200 hover:shadow-lg hover:border-amber-300 hover:scale-105 transition-all duration-300 cursor-pointer">
+                    <span class="w-10 h-10 text-amber-600 mb-2">@include('storefront.partials.icons', ['icon' => 'recycle', 'class' => 'w-full h-full'])</span>
+                    <p class="text-xs font-bold text-amber-700">Eco-Circular</p>
+                    <p class="text-[10px] text-amber-600 mt-0.5">Sustainable</p>
                 </div>
             </div>
         </div>
@@ -112,22 +115,58 @@
 
 {{-- ===== Related Products ===== --}}
 @if($related->count())
-<section class="bg-green-50/50 py-14 mt-6">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="flex items-center justify-between mb-8">
-            <h2 class="text-2xl md:text-3xl font-extrabold text-green-800">You May Also Like</h2>
-            <a href="{{ route('store.shop') }}" class="text-sm text-green-700 font-bold hover:underline inline-flex items-center gap-1">View All
+<section class="bg-gradient-to-b from-green-50/80 to-green-100/40 py-16 mt-12 border-t border-green-200/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-10">
+            <div>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-green-900">You May Also Like</h2>
+                <p class="text-green-700 mt-2 text-sm">Complete your sustainable baby care collection</p>
+            </div>
+            <a href="{{ route('store.shop') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-green-600 text-green-700 font-bold rounded-full hover:bg-green-50 transition-all duration-300 shadow-sm">
+                View All Products
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
             @foreach($related as $r)
-            <a href="{{ route('store.product', $r) }}" class="group bg-white rounded-2xl p-5 shadow-sm hover:shadow-xl transition text-center border border-gray-100 hover:border-green-200 hover:-translate-y-1 duration-300">
-                <span class="w-16 h-16 {{ $r->category === 'diaper' ? 'text-green-600' : ($r->category === 'wipe' ? 'text-blue-600' : 'text-amber-600') }} mx-auto group-hover:scale-110 transition-transform">
-                    @include('storefront.partials.icons', ['icon' => $r->category === 'diaper' ? 'diaper' : ($r->category === 'wipe' ? 'wipe' : 'bundle'), 'class' => 'w-full h-full'])
-                </span>
-                <h3 class="font-bold text-sm text-gray-800 mt-2">{{ $r->name }}</h3>
-                <span class="text-green-700 font-extrabold">KES {{ number_format($r->price) }}</span>
+            <a href="{{ route('store.product', $r) }}" class="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-green-400 hover:-translate-y-3">
+                <!-- Product Image Area -->
+                <div class="relative w-full aspect-square {{ $r->category === 'diaper' ? 'bg-gradient-to-br from-green-50 to-emerald-50' : ($r->category === 'wipe' ? 'bg-gradient-to-br from-blue-50 to-cyan-50' : 'bg-gradient-to-br from-amber-50 to-yellow-50') }} flex items-center justify-center overflow-hidden">
+                    @if($r->image_url)
+                        <img src="{{ asset($r->image_url) }}" alt="{{ $r->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                    @else
+                        <span class="w-32 h-32 {{ $r->category === 'diaper' ? 'text-green-600' : ($r->category === 'wipe' ? 'text-blue-600' : 'text-amber-600') }} group-hover:scale-130 group-hover:rotate-6 transition-transform duration-300">
+                            @include('storefront.partials.icons', ['icon' => $r->category === 'diaper' ? 'diaper' : ($r->category === 'wipe' ? 'wipe' : 'bundle'), 'class' => 'w-full h-full'])
+                        </span>
+                    @endif
+                    @if($r->stock <= 0)
+                    <span class="absolute top-4 right-4 px-3 py-1.5 bg-red-500 text-white text-xs font-extrabold rounded-full shadow-lg">Out of Stock</span>
+                    @elseif($r->stock <= 5)
+                    <span class="absolute top-4 right-4 px-3 py-1.5 bg-amber-500 text-white text-xs font-extrabold rounded-full shadow-lg">Only {{ $r->stock }} left</span>
+                    @endif
+                    <!-- Category Badge -->
+                    <span class="absolute bottom-4 left-4 px-3 py-1.5 bg-white/95 backdrop-blur text-gray-800 text-xs font-bold rounded-full shadow-md">{{ ucfirst($r->category) }}</span>
+                </div>
+                
+                <!-- Product Info -->
+                <div class="p-5 flex flex-col gap-3">
+                    <h3 class="font-bold text-sm text-gray-900 group-hover:text-green-700 transition-colors line-clamp-2 leading-tight">{{ $r->name }}</h3>
+                    
+                    <!-- Price Section - Prominent -->
+                    <div class="py-2 border-y border-gray-200">
+                        <div class="flex items-baseline justify-between gap-2">
+                            <span class="text-xl font-bold text-green-700">KES {{ number_format($r->price) }}</span>
+                            <span class="text-xs font-bold text-gray-500 uppercase tracking-widest {{ $r->stock > 0 ? 'text-green-600' : 'text-red-600' }}">
+                                {{ $r->stock > 0 ? 'In Stock' : 'Out' }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Action Button -->
+                    <button type="button" class="w-full py-2 px-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold text-xs rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-200 group-hover:scale-105 transform shadow-md hover:shadow-lg">
+                        View Product →
+                    </button>
+                </div>
             </a>
             @endforeach
         </div>

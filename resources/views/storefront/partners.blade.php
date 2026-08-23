@@ -57,57 +57,6 @@
     </div>
 </section>
 
-{{-- ===== 3. ENDORSEMENTS ===== --}}
-<section class="py-16 bg-[#faf8f3]">
-    <div class="max-w-5xl mx-auto px-4">
-        <div class="text-center mb-10">
-            <span class="inline-block px-4 py-1.5 bg-blue-100 text-blue-700 text-xs font-extrabold tracking-widest uppercase rounded-full mb-4">Testimonials</span>
-            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">Partner Endorsements</h2>
-        </div>
-        <div class="space-y-6">
-            <div class="relative bg-white rounded-3xl p-8 shadow-sm border border-green-50 hover:shadow-xl transition flex flex-col md:flex-row gap-6 items-start overflow-hidden">
-                <div class="absolute -top-6 -left-6 w-20 h-20 rounded-full bg-green-50"></div>
-                <div class="relative w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 text-white flex items-center justify-center flex-shrink-0 shadow-lg">
-                    @include('storefront.partials.icons', ['icon' => 'stethoscope', 'class' => 'w-8 h-8'])
-                </div>
-                <div class="relative">
-                    <h3 class="font-extrabold text-gray-800 text-lg">Dr. A. Njeri — Pediatrician</h3>
-                    <div class="flex text-yellow-400 mt-1 mb-3">
-                        @for($s=0;$s<5;$s++)<svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>@endfor
-                    </div>
-                    <p class="text-sm text-gray-600 leading-relaxed">"I recommend PINACARE diapers to my patients because they're gentle on delicate skin and free from harmful chemicals. It's wonderful to see a product that cares for both babies and the environment."</p>
-                </div>
-            </div>
-            <div class="relative bg-white rounded-3xl p-8 shadow-sm border border-green-50 hover:shadow-xl transition flex flex-col md:flex-row gap-6 items-start overflow-hidden">
-                <div class="absolute -top-6 -left-6 w-20 h-20 rounded-full bg-green-50"></div>
-                <div class="relative w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 text-white flex items-center justify-center flex-shrink-0 shadow-lg">
-                    @include('storefront.partials.icons', ['icon' => 'hospital', 'class' => 'w-8 h-8'])
-                </div>
-                <div class="relative">
-                    <h3 class="font-extrabold text-gray-800 text-lg">MamaCare Maternal Clinic</h3>
-                    <div class="flex text-yellow-400 mt-1 mb-3">
-                        @for($s=0;$s<5;$s++)<svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>@endfor
-                    </div>
-                    <p class="text-sm text-gray-600 leading-relaxed">"PINACARE aligns perfectly with our mission of promoting health and sustainability. We partner with them to provide eco-friendly baby care education to new mothers."</p>
-                </div>
-            </div>
-            <div class="relative bg-white rounded-3xl p-8 shadow-sm border border-green-50 hover:shadow-xl transition flex flex-col md:flex-row gap-6 items-start overflow-hidden">
-                <div class="absolute -top-6 -left-6 w-20 h-20 rounded-full bg-amber-50"></div>
-                <div class="relative w-16 h-16 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 text-white flex items-center justify-center flex-shrink-0 shadow-lg">
-                    @include('storefront.partials.icons', ['icon' => 'flask', 'class' => 'w-8 h-8'])
-                </div>
-                <div class="relative">
-                    <h3 class="font-extrabold text-gray-800 text-lg">Dr. K. Otieno — Dermatologist</h3>
-                    <div class="flex text-yellow-400 mt-1 mb-3">
-                        @for($s=0;$s<5;$s++)<svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>@endfor
-                    </div>
-                    <p class="text-sm text-gray-600 leading-relaxed">"The hypoallergenic, breathable materials in PINACARE products significantly reduce the risk of diaper rash. A thoughtful, science-backed product."</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 {{-- ===== 4. PARTNERSHIP CTA ===== --}}
 <section class="relative overflow-hidden py-16 bg-gradient-to-br from-green-700 to-green-800 text-white">
     <div class="absolute -top-10 -right-10 w-64 h-64 rounded-full bg-white/5"></div>
