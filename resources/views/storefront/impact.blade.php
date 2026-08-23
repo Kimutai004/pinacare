@@ -81,19 +81,21 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div class="bg-white rounded-2xl p-8 text-center shadow-sm hover:shadow-lg transition border border-green-100">
                 <p class="text-4xl md:text-5xl font-extrabold text-green-700 mb-2">300K</p>
-                <p class="text-sm font-semibold text-gray-600">Metric Tons CO₂ Offset</p>
+                <p class="text-sm font-semibold text-gray-600">Diapers discarded every single minute globally. </p>
             </div>
             <div class="bg-white rounded-2xl p-8 text-center shadow-sm hover:shadow-lg transition border border-green-100">
                 <p class="text-4xl md:text-5xl font-extrabold text-green-700 mb-2">800M</p>
-                <p class="text-sm font-semibold text-gray-600">Liters Water Conserved</p>
+                <p class="text-sm font-semibold text-gray-600">Diapers discarded annually in Kenya </p>
             </div>
             <div class="bg-white rounded-2xl p-8 text-center shadow-sm hover:shadow-lg transition border border-green-100">
                 <p class="text-4xl md:text-5xl font-extrabold text-green-700 mb-2">6,000</p>
-                <p class="text-sm font-semibold text-gray-600">Jobs Created</p>
+                <p class="text-sm font-semibold text-gray-600">Total diapers used by a single child. </p>
             </div>
             <div class="bg-white rounded-2xl p-8 text-center shadow-sm hover:shadow-lg transition border border-green-100">
                 <p class="text-4xl md:text-5xl font-extrabold text-green-700 mb-2">248M</p>
-                <p class="text-sm font-semibold text-gray-600">Families Reached</p>
+                <p class="text-sm font-semibold text-gray-600">Barrels of Crude Oil 
+
+Used annually to manufacture conventional diapers globally. </p>
             </div>
         </div>
     </div>
