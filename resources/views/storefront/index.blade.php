@@ -75,34 +75,17 @@
     {{-- Product image - fills the entire circle --}}
     <div class="absolute inset-2 rounded-full overflow-hidden border-4 border-white/20 shadow-2xl">
 
-        @if($featuredProducts->count())
+        @php
+            $diaperProduct = $featuredProducts->where('category', 'diaper')->first() ?? $featuredProducts->first();
+        @endphp
 
-            @if($featuredProducts->first()->image_url)
+        @if($diaperProduct && $diaperProduct->image_url)
 
-                <img
-                    src="{{ asset($featuredProducts->first()->image_url) }}"
-                    alt="{{ $featuredProducts->first()->name }}"
-                    class="w-full h-full object-cover"
-                >
-
-            @else
-
-                <div class="w-full h-full flex items-center justify-center bg-green-900/40 text-green-300">
-
-                    <div class="w-48 h-48 float">
-                        @include('storefront.partials.icons', [
-                            'icon' => $featuredProducts->first()->category === 'diaper'
-                                ? 'diaper'
-                                : ($featuredProducts->first()->category === 'wipe'
-                                    ? 'wipe'
-                                    : 'bundle'),
-                            'class' => 'w-full h-full'
-                        ])
-                    </div>
-
-                </div>
-
-            @endif
+            <img
+                src="{{ asset($diaperProduct->image_url) }}"
+                alt="{{ $diaperProduct->name }}"
+                class="w-full h-full object-cover"
+            >
 
         @else
 
@@ -129,7 +112,7 @@
                 {{-- Floating badges --}}
                 <div class="absolute top-8 -left-2 bg-white/95 backdrop-blur rounded-2xl px-4 py-3 shadow-xl flex items-center gap-3 float">
                     <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
-                        @include('storefront.partials.icons', ['icon' => 'leaf', 'class' => 'w-5 h-5'])
+                        @include('storefront.partials.icons', ['icon' => 'logo', 'class' => 'w-5 h-5'])
                     </div>
                     <div>
                         <p class="text-xs font-extrabold text-gray-800">Eco-Friendly</p>
