@@ -10,9 +10,14 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 echo "Running migrations..."
-php artisan migrate --force --verbose
+if ! php artisan migrate --force --verbose; then
+    echo "ERROR: Migrations failed!"
+    exit 1
+fi
 echo "Migrations completed. Seeding database..."
-php artisan db:seed --force --verbose
+if ! php artisan db:seed --force --verbose; then
+    echo "WARNING: Database seeding failed, but continuing..."
+fi
 echo "Database seeded. Application ready!"
 
 exec apache2-foreground
