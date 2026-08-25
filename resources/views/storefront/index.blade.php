@@ -74,12 +74,7 @@
 
     {{-- Product image - fills the entire circle --}}
     <div class="absolute inset-2 rounded-full overflow-hidden border-4 border-white/20 shadow-2xl">
-
-        <img
-            src="{{ asset($featuredProducts->first()?->image_url ?? 'Small(Front View).png') }}"
-            alt="{{ $featuredProducts->first()?->name ?? 'PINACARE Diapers' }}"
-            class="w-full h-full object-cover"
-        >
+        <img src="{{ asset('Medium (Front View).png') }}" alt="PINACARE Eco Baby Care" class="w-full h-full object-cover">
 
     </div>
 
