@@ -8,7 +8,7 @@
 <section class="relative min-h-screen flex items-center overflow-hidden bg-[#0b3d2e]">
     {{-- Layered background --}}
 <div class="absolute inset-0">
-    <img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
+    <img src="{{ asset('Single flat view.png') }}"
          alt="Eco baby care"
          class="w-full h-full object-cover opacity-30">
 
@@ -75,32 +75,11 @@
     {{-- Product image - fills the entire circle --}}
     <div class="absolute inset-2 rounded-full overflow-hidden border-4 border-white/20 shadow-2xl">
 
-        @php
-            $diaperProduct = $featuredProducts->where('category', 'diaper')->first() ?? $featuredProducts->first();
-        @endphp
-
-        @if($diaperProduct && $diaperProduct->image_url)
-
-            <img
-                src="{{ asset($diaperProduct->image_url) }}"
-                alt="{{ $diaperProduct->name }}"
-                class="w-full h-full object-cover"
-            >
-
-        @else
-
-            <div class="w-full h-full flex items-center justify-center bg-green-900/40 text-green-300">
-
-                <div class="w-48 h-48 float">
-                    @include('storefront.partials.icons', [
-                        'icon' => 'diaper',
-                        'class' => 'w-full h-full'
-                    ])
-                </div>
-
-            </div>
-
-        @endif
+        <img
+            src="{{ asset($featuredProducts->first()?->image_url ?? 'Small(Front View).png') }}"
+            alt="{{ $featuredProducts->first()?->name ?? 'PINACARE Diapers' }}"
+            class="w-full h-full object-cover"
+        >
 
     </div>
 
@@ -149,7 +128,7 @@
             {{-- Left: visual story --}}
             <div class="relative order-2 lg:order-1">
                 <div class="rounded-3xl overflow-hidden shadow-2xl border-8 border-white">
-                    <img src="https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80" alt="Happy baby with PINACARE" class="w-full h-[420px] object-cover">
+                    <img src="{{ asset('Medium (Front view).png') }}" alt="Happy baby with PINACARE" class="w-full h-[420px] object-cover">
                 </div>
                 {{-- Floating stat card --}}
                 <div class="absolute -bottom-8 left-6 md:left-10 bg-green-700 text-white rounded-2xl px-6 py-5 shadow-xl">

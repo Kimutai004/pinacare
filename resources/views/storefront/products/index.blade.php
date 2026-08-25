@@ -47,8 +47,8 @@
             @foreach($products as $product)
             <a href="{{ route('store.product', $product) }}" class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition overflow-hidden border border-gray-100 hover:border-green-200 hover:-translate-y-1 duration-300">
                 <div class="relative aspect-square {{ $product->category === 'diaper' ? 'bg-gradient-to-br from-green-50 to-white' : ($product->category === 'wipe' ? 'bg-gradient-to-br from-blue-50 to-white' : 'bg-gradient-to-br from-amber-50 to-white') }} flex items-center justify-center p-6 group-hover:bg-green-100 transition-colors">
-                    @if($product->image_url)
-                        <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                    @if(true)
+                        <img src="{{ asset('Medium (Front view).png') }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
                     @else
                     <span class="w-24 h-24 {{ $product->category === 'diaper' ? 'text-green-600' : ($product->category === 'wipe' ? 'text-blue-600' : 'text-amber-600') }} group-hover:scale-110 transition-transform">
                         @include('storefront.partials.icons', ['icon' => $product->category === 'diaper' ? 'diaper' : ($product->category === 'wipe' ? 'wipe' : 'bundle'), 'class' => 'w-full h-full'])
