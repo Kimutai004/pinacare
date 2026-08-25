@@ -240,23 +240,24 @@
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             @foreach($featuredProducts as $product)
-            <a href="{{ route('store.product', $product) }}" data-category="{{ $product->category }}" class="product-card group bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden border border-gray-100 hover:border-green-200">
-<div class="aspect-square {{ $product->category === 'diaper' ? 'bg-green-50' : ($product->category === 'wipe' ? 'bg-blue-50' : 'bg-amber-50') }} flex items-center justify-center p-6 group-hover:bg-green-100 transition-colors relative">
-                    @if($product->image_url)
-                        <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+            <a href="{{ route('store.product', $product) }}" class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition overflow-hidden border border-gray-100 hover:border-green-200 hover:-translate-y-1 duration-300">
+                <div class="relative aspect-square {{ $product->category === 'diaper' ? 'bg-gradient-to-br from-green-50 to-white' : ($product->category === 'wipe' ? 'bg-gradient-to-br from-blue-50 to-white' : 'bg-gradient-to-br from-amber-50 to-white') }} flex items-center justify-center p-6 group-hover:bg-green-100 transition-colors">
+                    @if(true)
+                        <img src="{{ asset('Medium (Front view).png') }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
                     @else
-                    <span class="w-20 h-20 {{ $product->category === 'diaper' ? 'text-green-600' : ($product->category === 'wipe' ? 'text-blue-600' : 'text-amber-600') }} group-hover:scale-110 transition-transform">
+                    <span class="w-24 h-24 {{ $product->category === 'diaper' ? 'text-green-600' : ($product->category === 'wipe' ? 'text-blue-600' : 'text-amber-600') }} group-hover:scale-110 transition-transform">
                         @include('storefront.partials.icons', ['icon' => $product->category === 'diaper' ? 'diaper' : ($product->category === 'wipe' ? 'wipe' : 'bundle'), 'class' => 'w-full h-full'])
                     </span>
                     @endif
                     @if($product->stock <= 0)
-                    <span class="absolute top-2 right-2 px-2 py-0.5 bg-red-500 text-white text-[10px] font-extrabold rounded-full">Out of Stock</span>
+                    <span class="absolute top-3 right-3 px-2.5 py-1 bg-red-500 text-white text-[10px] font-extrabold rounded-full shadow">Out of Stock</span>
                     @elseif($product->stock <= 10)
-                    <span class="absolute top-2 right-2 px-2 py-0.5 bg-amber-400 text-white text-[10px] font-extrabold rounded-full">Low Stock</span>
+                    <span class="absolute top-3 right-3 px-2.5 py-1 bg-amber-400 text-white text-[10px] font-extrabold rounded-full shadow">Low Stock</span>
                     @endif
+                    <span class="absolute top-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur text-{{ $product->category === 'diaper' ? 'green' : ($product->category === 'wipe' ? 'blue' : 'amber') }}-600 text-[10px] font-extrabold uppercase tracking-wider rounded-full shadow">{{ $product->category }}</span>
                 </div>
                 <div class="p-4">
-                    <span class="text-[10px] font-extrabold {{ $product->category === 'diaper' ? 'text-green-600' : ($product->category === 'wipe' ? 'text-blue-600' : 'text-amber-600') }} uppercase tracking-wider">{{ $product->category }}{{ $product->size ? ' · Size '.$product->size : '' }}</span>
+                    @if($product->size)<span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Size {{ $product->size }}</span>@endif
                     <h3 class="font-bold text-gray-800 mt-1 text-sm md:text-base leading-tight">{{ $product->name }}</h3>
                     <div class="flex items-center justify-between mt-3">
                         <span class="text-lg font-extrabold text-gray-900">KES {{ number_format($product->price) }}</span>
