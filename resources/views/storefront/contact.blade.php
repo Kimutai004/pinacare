@@ -32,7 +32,7 @@
                         @include('storefront.partials.icons', ['icon' => 'email', 'class' => 'w-7 h-7'])
                     </div>
                     <h3 class="font-extrabold text-gray-800 mt-4">Email</h3>
-                    <a href="mailto:pinacare26@gmail.com" class="text-green-700 font-bold hover:underline mt-1 block">pinacare26@gmail.com</a>
+                    <a href="mailto:info@pinacare.com" class="text-green-700 font-bold hover:underline mt-1 block">info@pinacare.com</a>
                 </div>
             </div>
             <div class="group relative overflow-hidden bg-white rounded-3xl p-8 text-center shadow-sm border border-blue-50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
