@@ -43,7 +43,7 @@ class StripePaymentService
             // Create payment intent
             $paymentIntent = PaymentIntent::create([
                 'amount' => (int)($order->total_amount * 100), // Amount in cents
-                'currency' => 'usd', // Change to KES if Stripe supports it
+                'currency' => 'kes', // Kenyan Shilling
                 'customer' => $stripeCustomer->id,
                 'payment_method_types' => ['card'],
                 'description' => 'Order #' . $order->id . ' from Pinacare',
@@ -204,7 +204,7 @@ class StripePaymentService
         try {
             $paymentIntent = PaymentIntent::create([
                 'amount' => (int)($order->total_amount * 100),
-                'currency' => 'usd',
+                'currency' => 'kes', // Kenyan Shilling
                 'payment_method' => $paymentMethodId,
                 'confirm' => true,
                 'off_session' => true,

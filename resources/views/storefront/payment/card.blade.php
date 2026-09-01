@@ -216,7 +216,7 @@
         // Enable submit button when ready
         setTimeout(() => {
             document.getElementById('payment-button').disabled = false;
-            document.getElementById('button-text').textContent = 'Pay Ksh {{ number_format($amount / 100, 2) }}';
+            document.getElementById('button-text').textContent = 'Pay Ksh {{ number_format($amount, 2) }}';
         }, 500);
 
         // Handle form submission

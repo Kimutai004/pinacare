@@ -85,15 +85,15 @@
             {{-- Actions --}}
             @if($product->stock > 0)
             <div class="mt-8 space-y-4">
-                <form method="POST" action="{{ route('store.cart.add') }}" class="flex items-center gap-4">
+                <form method="POST" action="{{ route('store.cart.add') }}" class="flex items-center gap-4" id="addToCartForm">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <div class="flex items-center border border-gray-300 rounded-full bg-white">
-                        <button type="button" onclick="this.parentNode.querySelector('input').stepDown();this.parentNode.querySelector('input').dispatchEvent(new Event('change'))" class="px-3 py-2 text-gray-600 hover:text-green-700">−</button>
-                        <input type="number" name="qty" value="1" min="1" max="{{ $product->stock }}" class="w-12 text-center text-sm font-bold border-0 focus:outline-none" readonly>
-                        <button type="button" onclick="this.parentNode.querySelector('input').stepUp();this.parentNode.querySelector('input').dispatchEvent(new Event('change'))" class="px-3 py-2 text-gray-600 hover:text-green-700">+</button>
+                        <button type="button" onclick="decreaseQty()" class="px-3 py-2 text-gray-600 hover:text-green-700">−</button>
+                        <input type="number" name="qty" value="1" min="1" max="{{ $product->stock }}" class="w-12 text-center text-sm font-bold border-0 focus:outline-none" readonly id="qtyInput">
+                        <button type="button" onclick="increaseQty()" class="px-3 py-2 text-gray-600 hover:text-green-700">+</button>
                     </div>
-                    <button type="submit" class="flex-1 px-6 py-3.5 bg-green-600 text-white font-bold rounded-full hover:bg-green-700 transition shadow flex items-center justify-center gap-2">
+                    <button type="submit" class="flex-1 px-6 py-3.5 bg-green-600 text-white font-bold rounded-full hover:bg-green-700 transition shadow flex items-center justify-center gap-2" id="addToCartBtn">
                         @include('storefront.partials.icons', ['icon' => 'cart', 'class' => 'w-4 h-4'])
                         Add to Cart — KES {{ number_format($product->price) }}
                     </button>
@@ -177,6 +177,41 @@
 
 @push('scripts')
 <script>
+    const productPrice = {{ $product->price }};
+    
+    function updateCartButtonAmount() {
+        const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+        const total = productPrice * qty;
+        const formattedTotal = total.toLocaleString('en-US');
+        document.getElementById('addToCartBtn').innerHTML = `
+            @include('storefront.partials.icons', ['icon' => 'cart', 'class' => 'w-4 h-4'])
+            Add to Cart — KES ${formattedTotal}
+        `;
+    }
+    
+    function increaseQty() {
+        const input = document.getElementById('qtyInput');
+        const max = parseInt(input.max);
+        if (parseInt(input.value) < max) {
+            input.value = parseInt(input.value) + 1;
+            updateCartButtonAmount();
+        }
+    }
+    
+    function decreaseQty() {
+        const input = document.getElementById('qtyInput');
+        const min = parseInt(input.min);
+        if (parseInt(input.value) > min) {
+            input.value = parseInt(input.value) - 1;
+            updateCartButtonAmount();
+        }
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateCartButtonAmount();
+    });
+    
     document.getElementById('mobileMenuBtn')?.addEventListener('click', function(){
         document.getElementById('mobileMenu')?.classList.toggle('hidden');
     });
