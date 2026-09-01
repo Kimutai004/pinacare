@@ -152,7 +152,7 @@
                                 <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
                             </svg>
                             <div>
-                                <p class="font-bold text-green-900 mb-1">🔒 Secure Payment Guaranteed</p>
+                                <p class="font-bold text-green-900 mb-1"> Secure Payment Guaranteed</p>
                                 <p class="text-green-800 text-sm leading-relaxed">Your payment is encrypted and processed securely by Stripe. Your card details are never stored on our servers and are PCI DSS compliant.</p>
                             </div>
                         </div>
