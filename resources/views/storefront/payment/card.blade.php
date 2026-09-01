@@ -1,150 +1,192 @@
 @extends('storefront.layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-2xl mx-auto">
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 pt-32 pb-12">
+    <div class="max-w-7xl mx-auto px-4">
         <!-- Header -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Card Payment</h1>
-            <p class="text-gray-600">Complete your purchase with a secure card payment</p>
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Secure Card Payment</h1>
+            <p class="text-gray-600 text-lg">Complete your purchase with Stripe's secure payment processing</p>
         </div>
 
-        <!-- Order Summary -->
-        <div class="bg-white border border-gray-200 rounded-lg p-6 mb-8">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Order Summary</h2>
-            <div class="space-y-3">
-                <div class="flex justify-between text-gray-600">
-                    <span>Order ID:</span>
-                    <span class="font-semibold text-gray-800">#{{ $order->id }}</span>
-                </div>
-                <div class="flex justify-between text-gray-600">
-                    <span>Items:</span>
-                    <span class="font-semibold text-gray-800">{{ $order->items ? $order->items->count() : 0 }}</span>
-                </div>
-                <hr class="my-3">
-                <div class="flex justify-between text-lg">
-                    <span class="font-semibold text-gray-800">Total Amount:</span>
-                    <span class="font-bold text-blue-600">Ksh {{ number_format($order->total_amount, 2) }}</span>
+        <!-- Main Grid Layout -->
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Left: Order Summary (Sticky) -->
+            <div class="lg:col-span-1">
+            <div class="bg-white rounded-2xl shadow-lg border border-green-100 p-8 sticky top-20">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                        Order Summary
+                    </h2>
+                    
+                    <div class="space-y-4 mb-6">
+                        <div class="flex items-center justify-between py-3 border-b border-gray-200">
+                            <span class="text-gray-600 font-medium">Order ID:</span>
+                            <span class="font-bold text-gray-800 text-lg">#{{ $order->id }}</span>
+                        </div>
+                        <div class="flex items-center justify-between py-3 border-b border-gray-200">
+                            <span class="text-gray-600 font-medium">Items:</span>
+                            <span class="font-bold text-gray-800 text-lg">{{ $order->items ? $order->items->count() : 0 }}</span>
+                        </div>
+                        <div class="flex items-center justify-between py-3 border-b border-gray-200">
+                            <span class="text-gray-600 font-medium">Subtotal:</span>
+                            <span class="font-semibold text-gray-800">Ksh {{ number_format($order->total_amount, 2) }}</span>
+                        </div>
+                    </div>
+
+                <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 mb-6 border-2 border-green-200">
+                    <div class="text-sm text-gray-600 mb-1">Total Amount</div>
+                    <div class="text-3xl font-bold text-green-600">Ksh {{ number_format($order->total_amount, 2) }}</div>
+                    </div>
+
+                    <!-- Order Items Preview -->
+                    @if($order->items && $order->items->count() > 0)
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <h3 class="font-semibold text-gray-800 mb-3 text-sm">Items in this order:</h3>
+                        <div class="space-y-2">
+                            @foreach($order->items as $item)
+                            <div class="flex justify-between items-center text-sm py-2">
+                                <span class="text-gray-600">{{ $item->product->name ?? 'Product' }} (x{{ $item->quantity }})</span>
+                                <span class="font-semibold text-gray-800">Ksh {{ number_format($item->subtotal, 2) }}</span>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
-        </div>
 
-        <!-- Payment Form -->
-        <div class="bg-white border border-gray-200 rounded-lg p-6 mb-8">
-            <h2 class="text-xl font-semibold text-gray-800 mb-6">Payment Details</h2>
+            <!-- Right: Payment Form -->
+            <div class="lg:col-span-2">
+            <div class="bg-white rounded-2xl shadow-lg border border-green-100 p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-8 flex items-center gap-2">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h10m4 0a1 1 0 11-2 0m2 0a1 1 0 10-2 0m-4-6a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        Payment Information
+                    </h2>
 
-            <!-- Saved Cards Option (if available) -->
-            @if($shouldSaveCard && count($savedCards) > 0)
-                <div class="mb-6">
-                    <label class="block text-gray-700 font-semibold mb-3">Use Saved Card</label>
-                    <div class="space-y-2">
-                        @foreach($savedCards as $card)
-                            <div class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-400 cursor-pointer"
+                    <!-- Saved Cards Option (if available) -->
+                    @if($shouldSaveCard && count($savedCards) > 0)
+                    <div class="mb-8 pb-8 border-b border-gray-200">
+                        <label class="block text-gray-700 font-bold mb-4">Use Saved Card</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                            @foreach($savedCards as $card)
+                            <div class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-green-400 hover:bg-green-50 cursor-pointer transition"
                                  onclick="selectSavedCard({{ $card->id }}, '{{ $card->card_brand }}', '{{ $card->card_last_four }}')">
                                 <input type="radio" name="payment_method" value="saved_card_{{ $card->id }}"
-                                       class="mr-3" onchange="useSavedCard({{ $card->id }})">
+                                       class="mr-3 w-4 h-4" onchange="useSavedCard({{ $card->id }})">
                                 <div class="flex-1">
-                                    <div class="font-semibold text-gray-800">
-                                        {{ ucfirst($card->card_brand) }} ending in {{ $card->card_last_four }}
+                                    <div class="font-bold text-gray-800">
+                                        {{ ucfirst($card->card_brand) }} •••• {{ $card->card_last_four }}
                                     </div>
-                                    <div class="text-sm text-gray-500">
-                                        Expires {{ $card->card_exp_month }}/{{ $card->card_exp_year }}
+                                    <div class="text-xs text-gray-500">
+                                        Exp {{ $card->card_exp_month }}/{{ $card->card_exp_year }}
                                         @if($card->isExpired())
-                                            <span class="text-red-500 font-semibold">(Expired)</span>
+                                            <span class="text-red-600 font-bold">(Expired)</span>
                                         @endif
                                     </div>
-                                    @if($card->is_default)
-                                        <span class="inline-block text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded mt-1">
-                                            Default
-                                        </span>
-                                    @endif
                                 </div>
+                                @if($card->is_default)
+                                <span class="ml-2 px-2 py-1 text-xs font-bold bg-green-100 text-green-800 rounded">Default</span>
+                                @endif
                             </div>
-                        @endforeach
-                    </div>
+                            @endforeach
+                        </div>
 
-                    <hr class="my-6">
-                    <label class="flex items-center text-gray-700">
-                        <input type="radio" name="payment_method" value="new_card"
-                               class="mr-3" checked onchange="useNewCard()">
-                        <span>Use a new card</span>
-                    </label>
-                </div>
-            @endif
-
-            <!-- New Card Form -->
-            <form id="card-form" class="space-y-4">
-                <!-- Cardholder Name -->
-                <div>
-                    <label for="cardholder-name" class="block text-gray-700 font-semibold mb-2">
-                        Cardholder Name
-                    </label>
-                    <input type="text" id="cardholder-name" name="cardholder_name"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                           placeholder="John Doe" required>
-                </div>
-
-                <!-- Stripe Card Element -->
-                <div>
-                    <label class="block text-gray-700 font-semibold mb-2">Card Details</label>
-                    <div id="card-element" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus-within:border-blue-500"></div>
-                    <div id="card-errors" class="text-red-500 text-sm mt-2"></div>
-                </div>
-
-                <!-- Save Card Checkbox (for logged-in users) -->
-                @if($shouldSaveCard)
-                    <div class="flex items-center">
-                        <input type="checkbox" id="save-card" name="save_card" value="1"
-                               class="mr-2 rounded border-gray-300">
-                        <label for="save-card" class="text-gray-700">
-                            Save this card for future purchases
+                        <label class="flex items-center text-gray-700 font-medium">
+                            <input type="radio" name="payment_method" value="new_card"
+                                   class="mr-3 w-4 h-4" checked onchange="useNewCard()">
+                            <span>Use a new card instead</span>
                         </label>
                     </div>
-                @endif
+                    @endif
 
-                <!-- Payment Button -->
-                <button type="submit" id="payment-button"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center gap-2"
-                        disabled>
-                    <span id="button-text">Processing Payment...</span>
-                </button>
-            </form>
+                    <!-- New Card Form -->
+                    <form id="card-form" class="space-y-6">
+                        <!-- Cardholder Name -->
+                        <div>
+                            <label for="cardholder-name" class="block text-gray-700 font-bold mb-2">
+                                Cardholder Name
+                            </label>
+                            <input type="text" id="cardholder-name" name="cardholder_name"
+                                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition text-gray-800 font-medium"
+                                   placeholder="John Doe" required>
+                        </div>
 
-            <!-- Security Info -->
-            <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <div class="flex items-start gap-3">
-                    <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
-                    </svg>
-                    <div class="text-sm">
-                        <p class="font-semibold text-blue-900 mb-1">Secure Payment</p>
-                        <p class="text-blue-800">Your payment is encrypted and processed securely by Stripe. We never store your card details.</p>
+                        <!-- Stripe Card Element -->
+                        <div>
+                            <label class="block text-gray-700 font-bold mb-2">Card Details</label>
+                            <div id="card-element" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-200 transition bg-white"></div>
+                            <div id="card-errors" class="text-red-600 text-sm font-semibold mt-2 min-h-5"></div>
+                        </div>
+
+                        <!-- Save Card Checkbox (for logged-in users) -->
+                        @if($shouldSaveCard)
+                        <div class="flex items-center p-4 bg-green-50 rounded-lg border border-green-200">
+                            <input type="checkbox" id="save-card" name="save_card" value="1"
+                                   class="w-5 h-5 mr-3 rounded accent-green-600">
+                            <label for="save-card" class="text-gray-700 font-medium cursor-pointer">
+                                Save this card for faster checkout next time
+                            </label>
+                        </div>
+                        @endif
+
+                        <!-- Payment Button -->
+                        <button type="submit" id="payment-button"
+                                class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 px-6 rounded-lg transition duration-200 flex items-center justify-center gap-2 shadow-lg text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                            <span id="button-text">Processing Payment...</span>
+                        </button>
+                    </form>
+
+                    <!-- Security Info -->
+                    <div class="mt-8 p-5 bg-green-50 border-2 border-green-200 rounded-lg">
+                        <div class="flex items-start gap-3">
+                            <svg class="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <div>
+                                <p class="font-bold text-green-900 mb-1">🔒 Secure Payment Guaranteed</p>
+                                <p class="text-green-800 text-sm leading-relaxed">Your payment is encrypted and processed securely by Stripe. Your card details are never stored on our servers and are PCI DSS compliant.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Payment Status Indicator -->
-        <div id="payment-status" class="hidden mb-8 p-4 rounded-lg border">
-            <div class="flex items-center gap-2">
-                <div class="animate-spin">
-                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M4.293 5.293a1 1 0 011.414 0A7 7 0 0016.708 11.5h-2.828a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.172A9 9 0 105.707 3.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
-                    </svg>
+        <div id="payment-status" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-xl p-8 shadow-2xl">
+                <div class="flex flex-col items-center gap-4">
+                    <div class="animate-spin">
+                        <svg class="w-10 h-10 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 5.293a1 1 0 011.414 0A7 7 0 0016.708 11.5h-2.828a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.172A9 9 0 105.707 3.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <span id="status-message" class="text-gray-700 font-semibold">Processing your payment...</span>
                 </div>
-                <span id="status-message" class="text-gray-700">Processing payment...</span>
             </div>
         </div>
 
         <!-- Error Alert -->
-        <div id="error-alert" class="hidden mb-8 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <div class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                </svg>
-                <div>
-                    <p class="font-semibold text-red-900 mb-1">Payment Failed</p>
-                    <p id="error-message" class="text-red-800"></p>
+        <div id="error-alert" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-xl p-8 shadow-2xl max-w-md">
+                <div class="flex items-start gap-4">
+                    <svg class="w-8 h-8 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                    </svg>
+                    <div>
+                        <p class="font-bold text-red-900 mb-2 text-lg">Payment Failed</p>
+                        <p id="error-message" class="text-red-800 mb-4"></p>
+                        <button onclick="document.getElementById('error-alert').classList.add('hidden')" class="px-4 py-2 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition">Try Again</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -193,8 +235,29 @@
 <script>
     // Initialize Stripe
     const stripe = Stripe('{{ $stripePublicKey }}');
-    const elements = stripe.elements();
-    const cardElement = elements.create('card');
+    const elements = stripe.elements({
+        appearance: {
+            theme: 'flat',
+            variables: {
+                colorPrimary: '#16a34a',
+                colorText: '#1f2937',
+                borderRadius: '0.5rem',
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+            }
+        }
+    });
+    const cardElement = elements.create('card', {
+        hidePostalCode: true,
+        style: {
+            base: {
+                fontSize: '16px',
+                color: '#1f2937',
+                '::placeholder': {
+                    color: '#9ca3af',
+                },
+            }
+        }
+    });
 
     let selectedSavedCardId = null;
     let paymentIntentId = '{{ $paymentIntentId }}';
@@ -314,14 +377,39 @@
             throw new Error(result.error || 'Payment verification failed');
         }
 
-        // Show success
-        document.getElementById('card-form').classList.add('hidden');
+        // Hide payment form and show success
         document.getElementById('payment-status').classList.add('hidden');
-        document.getElementById('success-animation').classList.remove('hidden');
+        
+        // Show success modal
+        showSuccessModal(result.redirect);
+    }
 
-        // Redirect after brief delay
+    function showSuccessModal(redirectUrl) {
+        // Create and show success modal
+        const modal = document.createElement('div');
+        modal.id = 'success-modal';
+        modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+        modal.innerHTML = `
+            <div class="bg-white rounded-2xl p-8 shadow-2xl text-center max-w-md">
+                <div class="mb-6">
+                    <svg class="w-16 h-16 text-green-500 mx-auto animate-bounce" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Payment Successful! 🎉</h2>
+                <p class="text-gray-600 mb-6">Your order has been confirmed. Redirecting you...</p>
+                <div class="flex justify-center">
+                    <svg class="w-6 h-6 animate-spin text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        // Redirect after 2 seconds
         setTimeout(() => {
-            window.location.href = result.redirect;
+            window.location.href = redirectUrl;
         }, 2000);
     }
 
