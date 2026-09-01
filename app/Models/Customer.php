@@ -22,4 +22,20 @@ class Customer extends Model
     {
         return $this->hasMany(Testimonial::class);
     }
+
+    /**
+     * Customer's saved cards for quick checkout
+     */
+    public function savedCards()
+    {
+        return $this->hasMany(SavedCard::class);
+    }
+
+    /**
+     * Get the customer's default card
+     */
+    public function getDefaultCard()
+    {
+        return $this->savedCards()->where('is_default', true)->first();
+    }
 }

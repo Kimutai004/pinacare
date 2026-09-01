@@ -8,10 +8,12 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\SavedCard;
 use App\Models\Subscription;
 use App\Services\PaymentService;
 use App\Services\MpesaPaymentService;
 use App\Services\StripePaymentService;
+use App\Services\CardPaymentService;
 use App\Services\PayPalPaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -19,10 +21,12 @@ use Illuminate\Support\Facades\Log;
 class CheckoutController extends Controller
 {
     private $paymentService;
+    private $cardPaymentService;
 
     public function __construct()
     {
         $this->paymentService = new PaymentService();
+        $this->cardPaymentService = new CardPaymentService();
     }
 
     /**
@@ -197,22 +201,37 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Initiate Stripe payment
+     * Initiate Stripe/Card payment
      */
     private function initiateStripe(Order $order, array $customerData)
     {
-        $stripeService = new StripePaymentService();
-        $result = $stripeService->createPaymentIntent($order, $customerData);
+        // Use CardPaymentService for card payments
+        $result = $this->cardPaymentService->initiatePayment($order, [
+            'name' => $customerData['name'],
+            'email' => $customerData['email'],
+            'phone' => $customerData['phone'],
+            'customer_id' => auth()->guard('web')->id() ?? null, // For logged-in customers
+        ]);
 
         if ($result['success']) {
-            // Store Stripe payment intent ID for later verification
-            $order->update(['stripe_payment_intent_id' => $result['payment_intent_id']]);
+            // Get customer's saved cards if authenticated
+            $savedCards = [];
+            if (auth()->guard('web')->id()) {
+                $savedCards = $this->cardPaymentService->getSavedCards(auth()->guard('web')->id());
+            }
 
-            return view('storefront.payment.stripe', [
+            // Eager load items relationship
+            $order->load('items');
+
+            return view('storefront.payment.card', [
                 'order' => $order,
                 'clientSecret' => $result['client_secret'],
+                'paymentIntentId' => $result['payment_intent_id'],
                 'amount' => $result['amount'],
+                'currency' => $result['currency'],
                 'stripePublicKey' => config('services.stripe.public'),
+                'savedCards' => $savedCards,
+                'shouldSaveCard' => auth()->guard('web')->check(), // Show save card option if logged in
             ]);
         }
 
@@ -339,30 +358,155 @@ class CheckoutController extends Controller
      * Verify Stripe payment
      * Called from frontend after payment processing
      */
+    /**
+     * Handle Stripe webhook callback
+     * Called by Stripe when payment intent events occur
+     */
+    public function stripeWebhook(Request $request)
+    {
+        $payload = $request->getContent();
+        $signature = $request->header('Stripe-Signature');
+
+        try {
+            $result = $this->cardPaymentService->handleWebhook($payload, $signature);
+
+            Log::info('Stripe webhook processed', $result);
+
+            if ($result['status'] === 'success' && $result['order_id']) {
+                $order = Order::findOrFail($result['order_id']);
+                
+                // Confirm payment and deduct stock atomically
+                if ($this->paymentService->confirmPayment($order, $result)) {
+                    $this->createSubscriptionIfNeeded($order);
+                    Log::info('Order payment confirmed from webhook', ['order_id' => $order->id]);
+                }
+            } elseif ($result['status'] === 'failed' && $result['order_id']) {
+                $order = Order::findOrFail($result['order_id']);
+                $this->paymentService->handlePaymentFailure($order, $result['reason'] ?? 'Payment declined');
+            }
+
+            return response()->json(['status' => 'ok'], 200);
+        } catch (\Exception $e) {
+            Log::error('Stripe webhook error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return response()->json(['error' => 'Webhook error'], 400);
+        }
+    }
+
+    /**
+     * Verify card payment status (polling endpoint)
+     * Called by frontend to check payment status without webhooks
+     */
+    public function cardStatus($paymentIntentId)
+    {
+        try {
+            $order = Order::where('stripe_payment_intent_id', $paymentIntentId)->first();
+
+            if (!$order) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Payment not found',
+                ], 404);
+            }
+
+            // Check order status
+            if ($order->status === 'paid') {
+                return response()->json([
+                    'status' => 'success',
+                    'order_id' => $order->id,
+                    'message' => 'Payment successful',
+                ], 200);
+            } elseif ($order->status === 'payment_failed') {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => $order->payment_notes ?? 'Payment declined',
+                ], 200);
+            } else {
+                // Still pending - verify with Stripe
+                $stripeService = new StripePaymentService();
+                $paymentData = $stripeService->verifyPayment($paymentIntentId);
+
+                if ($paymentData['status'] === 'success') {
+                    // Payment succeeded - confirm it
+                    if ($this->paymentService->confirmPayment($order, $paymentData)) {
+                        $this->createSubscriptionIfNeeded($order);
+                        return response()->json([
+                            'status' => 'success',
+                            'order_id' => $order->id,
+                        ], 200);
+                    }
+                }
+
+                return response()->json([
+                    'status' => 'pending',
+                    'order_id' => $order->id,
+                ], 200);
+            }
+        } catch (\Exception $e) {
+            Log::error('Card status check failed', [
+                'error' => $e->getMessage(),
+                'payment_intent_id' => $paymentIntentId,
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Status check failed',
+            ], 500);
+        }
+    }
+
+    /**
+     * Handle card payment (frontend initiated with Stripe.js)
+     * Called after customer confirms payment on card form
+     */
     public function stripeCallback(Request $request)
     {
         $request->validate([
             'payment_intent_id' => 'required|string',
             'order_id' => 'required|integer',
+            'save_card' => 'nullable|boolean',
         ]);
 
-        $order = Order::findOrFail($request->order_id);
-        
-        $stripeService = new StripePaymentService();
-        $paymentData = $stripeService->verifyPayment($request->payment_intent_id);
+        try {
+            $order = Order::findOrFail($request->order_id);
+            
+            $stripeService = new StripePaymentService();
+            $paymentData = $stripeService->verifyPayment($request->payment_intent_id);
 
-        if ($paymentData['status'] === 'success') {
-            // Payment successful - deduct stock and complete order
-            if ($this->paymentService->confirmPayment($order, $paymentData)) {
-                $this->createSubscriptionIfNeeded($order);
-                session()->forget('cart');
-                
-                return redirect()->route('store.checkout.success', $order->id)
-                    ->with('success', 'Payment successful!');
+            if ($paymentData['status'] === 'success') {
+                // Payment successful - deduct stock and complete order
+                if ($this->paymentService->confirmPayment($order, $paymentData)) {
+                    // Save card if customer requested it
+                    if ($request->save_card && auth()->guard('web')->check()) {
+                        $this->saveCardFromPayment($request->payment_intent_id, auth()->guard('web')->id());
+                    }
+
+                    $this->createSubscriptionIfNeeded($order);
+                    session()->forget('cart');
+                    
+                    return response()->json([
+                        'success' => true,
+                        'redirect' => route('store.checkout.success', $order->id),
+                    ]);
+                }
             }
-        }
 
-        return back()->with('error', 'Payment verification failed');
+            return response()->json([
+                'success' => false,
+                'error' => 'Payment verification failed',
+            ], 400);
+        } catch (\Exception $e) {
+            Log::error('Card payment processing failed', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'error' => 'Payment failed: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -451,6 +595,103 @@ class CheckoutController extends Controller
             Log::debug('Recent orders with checkout IDs', $allOrders->toArray());
             return null;
         }
+    }
+
+    /**
+     * Save card from successful payment
+     * Stores tokenized card for future use
+     */
+    private function saveCardFromPayment($paymentIntentId, $customerId)
+    {
+        try {
+            $stripeService = new StripePaymentService();
+            
+            // Retrieve payment intent to get payment method
+            $paymentIntent = \Stripe\PaymentIntent::retrieve($paymentIntentId);
+            
+            if ($paymentIntent && $paymentIntent->payment_method) {
+                $stripeCustomer = $stripeService->getOrCreateCustomer(
+                    auth()->guard('web')->user()->email,
+                    auth()->guard('web')->user()->name
+                );
+
+                $this->cardPaymentService->saveCard(
+                    $customerId,
+                    $paymentIntent->payment_method,
+                    $stripeCustomer->id
+                );
+
+                Log::info('Card saved after payment', [
+                    'customer_id' => $customerId,
+                    'payment_intent_id' => $paymentIntentId,
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to save card after payment', [
+                'error' => $e->getMessage(),
+                'customer_id' => $customerId,
+            ]);
+            // Don't fail the order if card save fails
+        }
+    }
+
+    /**
+     * Get customer's saved cards (API endpoint)
+     */
+    public function getSavedCards()
+    {
+        if (!auth()->guard('web')->check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $cards = $this->cardPaymentService->getSavedCards(auth()->guard('web')->id());
+        $formatted = $cards->map(function ($card) {
+            return [
+                'id' => $card->id,
+                'display_name' => $card->getDisplayName(),
+                'last_four' => $card->card_last_four,
+                'brand' => $card->card_brand,
+                'expiry' => $card->getExpiryDate(),
+                'is_default' => $card->is_default,
+                'expired' => $card->isExpired(),
+            ];
+        });
+
+        return response()->json(['cards' => $formatted]);
+    }
+
+    /**
+     * Delete a saved card (API endpoint)
+     */
+    public function deleteSavedCard($cardId)
+    {
+        if (!auth()->guard('web')->check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $result = $this->cardPaymentService->deleteSavedCard(
+            $cardId,
+            auth()->guard('web')->id()
+        );
+
+        return response()->json($result);
+    }
+
+    /**
+     * Set default saved card (API endpoint)
+     */
+    public function setDefaultCard($cardId)
+    {
+        if (!auth()->guard('web')->check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $result = $this->cardPaymentService->setDefaultCard(
+            $cardId,
+            auth()->guard('web')->id()
+        );
+
+        return response()->json($result);
     }
 
     /**

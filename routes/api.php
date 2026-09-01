@@ -45,8 +45,17 @@ use App\Http\Controllers\CheckoutController;
 
 Route::withoutMiddleware(['api'])->group(function () {
     Route::post('/mpesa/callback', [CheckoutController::class, 'mpesaCallback']);
-    Route::post('/webhooks/stripe', [CheckoutController::class, 'stripeCallback']);
+    Route::post('/webhooks/stripe', [CheckoutController::class, 'stripeWebhook']);
     Route::post('/webhooks/paypal', [CheckoutController::class, 'paypalReturn']);
 });
 
+// Payment Status Endpoints
 Route::get('/mpesa/status/{checkoutRequestId}', [CheckoutController::class, 'mpesaStatus']);
+Route::get('/card/status/{paymentIntentId}', [CheckoutController::class, 'cardStatus']);
+
+// Saved Cards Management (authenticated customers only)
+Route::middleware('auth:web')->group(function () {
+    Route::get('/cards/saved', [CheckoutController::class, 'getSavedCards']);
+    Route::delete('/cards/{cardId}', [CheckoutController::class, 'deleteSavedCard']);
+    Route::post('/cards/{cardId}/default', [CheckoutController::class, 'setDefaultCard']);
+});

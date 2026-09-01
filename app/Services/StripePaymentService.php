@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
  * Requires:
  *  - STRIPE_PUBLIC_KEY in .env
  *  - STRIPE_SECRET_KEY in .env
- *  - STRIPE_WEBHOOK_SECRET in .env
+ *  - STRIPE_SECRET in .env
  */
 class StripePaymentService
 {
@@ -196,9 +196,65 @@ class StripePaymentService
     }
 
     /**
+     * Confirm payment using saved card (payment method)
+     * Directly charges the saved card without requiring 3D Secure flow
+     */
+    public function confirmPaymentWithCard($order, $paymentMethodId)
+    {
+        try {
+            $paymentIntent = PaymentIntent::create([
+                'amount' => (int)($order->total_amount * 100),
+                'currency' => 'usd',
+                'payment_method' => $paymentMethodId,
+                'confirm' => true,
+                'off_session' => true,
+                'description' => 'Order #' . $order->id . ' (Saved Card)',
+                'metadata' => [
+                    'order_id' => $order->id,
+                ],
+            ]);
+
+            return [
+                'status' => 'success',
+                'transaction_id' => $paymentIntent->id,
+                'charge_id' => $paymentIntent->latest_charge,
+                'amount' => $paymentIntent->amount / 100,
+                'payment_gateway' => 'stripe',
+            ];
+        } catch (\Exception $e) {
+            Log::error('Stripe saved card payment failed', [
+                'error' => $e->getMessage(),
+                'order_id' => $order->id,
+            ]);
+
+            return [
+                'status' => 'failed',
+                'reason' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Detach payment method from customer (for deletion)
+     */
+    public function detachPaymentMethod($paymentMethodId)
+    {
+        try {
+            $paymentMethod = \Stripe\PaymentMethod::retrieve($paymentMethodId);
+            $paymentMethod->detach();
+            return ['success' => true];
+        } catch (\Exception $e) {
+            Log::error('Payment method detach failed', [
+                'error' => $e->getMessage(),
+            ]);
+            return ['success' => false];
+        }
+    }
+
+    /**
      * Create or retrieve Stripe customer
      */
-    private function getOrCreateCustomer($email, $name = null, $phone = null)
+    public function getOrCreateCustomer($email, $name = null, $phone = null)
     {
         try {
             // Search for existing customer by email
