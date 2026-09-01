@@ -40,9 +40,13 @@ Route::get('/blog', [BlogController::class, 'index']);
 Route::get('/blog/{slug}', [BlogController::class, 'show']);
 Route::post('/blog', [BlogController::class, 'store']); // admin only
 
+// Payment Webhooks (without CSRF protection for external providers)
+use App\Http\Controllers\CheckoutController;
 
-// Payments
-Route::post('/payments/mpesa', [PaymentController::class, 'mpesa']);
-Route::post('/payments/stripe', [PaymentController::class, 'stripe']);
-Route::post('/payments/paypal', [PaymentController::class, 'paypal']);
-Route::get('/payments/status/{transaction_id}', [PaymentController::class, 'status']);
+Route::withoutMiddleware(['api'])->group(function () {
+    Route::post('/mpesa/callback', [CheckoutController::class, 'mpesaCallback']);
+    Route::post('/webhooks/stripe', [CheckoutController::class, 'stripeCallback']);
+    Route::post('/webhooks/paypal', [CheckoutController::class, 'paypalReturn']);
+});
+
+Route::get('/mpesa/status/{checkoutRequestId}', [CheckoutController::class, 'mpesaStatus']);

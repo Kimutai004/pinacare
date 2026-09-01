@@ -46,6 +46,12 @@ Route::get('/checkout', [CheckoutController::class, 'index'])->name('store.check
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('store.checkout.store');
 Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('store.checkout.success');
 
+// Payment processing
+Route::post('/payment/mpesa/callback', [CheckoutController::class, 'mpesaCallback'])->name('store.payment.mpesa.callback');
+Route::post('/payment/stripe/callback', [CheckoutController::class, 'stripeCallback'])->name('store.payment.stripe.callback');
+Route::get('/payment/paypal/return', [CheckoutController::class, 'paypalReturn'])->name('store.checkout.paypal.return');
+Route::get('/payment/paypal/cancel', [CheckoutController::class, 'paypalCancel'])->name('store.checkout.paypal.cancel');
+
 
 // ===== Admin Authentication =====
 Route::prefix('admin')->name('admin.')->group(function () {
