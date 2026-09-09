@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BlogPost;
+use App\Support\Seo;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
@@ -14,8 +15,10 @@ class BlogController extends Controller
 
     public function show($slug)
     {
-        $post = BlogPost::where('slug', $slug)->firstOrFail();
-        return view('storefront.blog.show', compact('post'));
+        $post = BlogPost::where('slug', $slug)->whereNotNull('published_at')->firstOrFail();
+
+        return view('storefront.blog.show', compact('post'))
+            ->with('pageJsonLd', Seo::article($post));
     }
 
     public function store(Request $request)

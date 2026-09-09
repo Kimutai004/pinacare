@@ -1,5 +1,6 @@
 @extends('storefront.layouts.app')
 @section('title', 'Contact Us')
+@section('meta_description', 'Get in touch with PINACARE — questions about orders, partnerships or our eco-friendly diapers? Reach our team in Nairobi, Kenya.')
 
 @section('content')
 {{-- ===== 1. HERO ===== --}}

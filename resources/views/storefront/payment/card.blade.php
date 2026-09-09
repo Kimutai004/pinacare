@@ -1,4 +1,6 @@
 @extends('storefront.layouts.app')
+@section('title', 'Checkout')
+@section('robots', 'noindex, nofollow')
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 pt-32 pb-12">

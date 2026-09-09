@@ -1,5 +1,6 @@
 @extends('storefront.layouts.app')
 @section('title', 'Our Impact')
+@section('meta_description', 'See the real-world impact of choosing PINACARE — diapers saved from landfill, CO2 reduced, and farming families supported across Kenya.')
 
 @section('content')
 {{-- ===== 1. HERO — Split layout with globe visual ===== --}}

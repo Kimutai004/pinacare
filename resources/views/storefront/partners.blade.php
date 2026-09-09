@@ -1,5 +1,6 @@
 @extends('storefront.layouts.app')
 @section('title', 'Healthcare Partnerships')
+@section('meta_description', 'PINACARE partners with healthcare providers to bring safe, sustainable baby care to more families. Learn about our partnerships and how to collaborate.')
 
 @section('content')
 {{-- ===== 1. HERO ===== --}}

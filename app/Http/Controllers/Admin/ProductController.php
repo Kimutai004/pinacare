@@ -40,6 +40,7 @@ class ProductController extends Controller
         ]);
 
         $data['is_active'] = $request->boolean('is_active');
+        $data['slug']      = Product::uniqueSlug($request->name);
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('products', 'public');
@@ -72,6 +73,7 @@ class ProductController extends Controller
         ]);
 
         $data['is_active'] = $request->boolean('is_active');
+        $data['slug']      = Product::uniqueSlug($request->name, $product->id);
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('products', 'public');

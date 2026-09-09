@@ -1,5 +1,6 @@
 @extends('storefront.layouts.app')
 @section('title', 'Order Confirmed!')
+@section('robots', 'noindex, nofollow')
 
 @section('content')
 <section class="relative max-w-3xl mx-auto px-4 py-16">

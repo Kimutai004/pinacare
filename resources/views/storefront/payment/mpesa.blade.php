@@ -1,4 +1,6 @@
 @extends('storefront.layouts.app')
+@section('title', 'M-Pesa Payment')
+@section('robots', 'noindex, nofollow')
 
 @section('content')
 <div class="payment-container">

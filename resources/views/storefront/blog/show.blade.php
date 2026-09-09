@@ -1,5 +1,7 @@
 @extends('storefront.layouts.app')
 @section('title', $post->title)
+@section('meta_description', \App\Support\Seo::excerpt($post->content))
+@section('og_type', 'article')
 
 @section('content')
 {{-- ===== 1. ARTICLE HEADER ===== --}}

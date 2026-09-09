@@ -1,5 +1,7 @@
 @extends('storefront.layouts.app')
 @section('title', 'Sustainable Baby Care')
+@section('meta_description', 'PINACARE makes 100% biodegradable diapers and organic wipes from pineapple leaf fibres — gentle on your baby, kind to the planet. Shop eco-friendly baby care delivered in Kenya.')
+@section('og_image', asset('pinacare.jpeg'))
 
 @section('content')
 {{-- ============================================================
@@ -10,6 +12,8 @@
 <div class="absolute inset-0">
     <img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
          alt="Eco baby care"
+         width="1920" height="1080"
+         loading="lazy" decoding="async"
          class="w-full h-full object-cover opacity-30">
 
     {{-- Dark Forest Green Overlay --}}
@@ -84,6 +88,8 @@
             <img
                 src="{{ asset($diaperProduct->image_url) }}"
                 alt="{{ $diaperProduct->name }}"
+                width="520" height="520"
+                fetchpriority="high"
                 class="w-full h-full object-cover"
             >
 
@@ -264,7 +270,7 @@
             <a href="{{ route('store.product', $product) }}" data-category="{{ $product->category }}" class="product-card group bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden border border-gray-100 hover:border-green-200">
 <div class="aspect-square {{ $product->category === 'diaper' ? 'bg-green-50' : ($product->category === 'wipe' ? 'bg-blue-50' : 'bg-amber-50') }} flex items-center justify-center p-6 group-hover:bg-green-100 transition-colors relative">
                     @if($product->image_url)
-                        <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                        <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" width="400" height="400" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
                     @else
                     <span class="w-20 h-20 {{ $product->category === 'diaper' ? 'text-green-600' : ($product->category === 'wipe' ? 'text-blue-600' : 'text-amber-600') }} group-hover:scale-110 transition-transform">
                         @include('storefront.partials.icons', ['icon' => $product->category === 'diaper' ? 'diaper' : ($product->category === 'wipe' ? 'wipe' : 'bundle'), 'class' => 'w-full h-full'])
