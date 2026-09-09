@@ -1,5 +1,6 @@
 @extends('storefront.layouts.app')
-@section('title', 'Shop All Products')
+@section('title', $pageTitle ?? 'Shop All Products')
+@section('meta_description', $pageDescription ?? 'Shop PINACARE\'s eco-friendly diapers, organic wipes and starter bundles — 100% biodegradable, baby-safe and delivered across Kenya. Filter by size and category.')
 
 @section('content')
 {{-- ===== 1. HERO BANNER ===== --}}
@@ -48,7 +49,7 @@
             <a href="{{ route('store.product', $product) }}" class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition overflow-hidden border border-gray-100 hover:border-green-200 hover:-translate-y-1 duration-300">
                 <div class="relative aspect-square {{ $product->category === 'diaper' ? 'bg-gradient-to-br from-green-50 to-white' : ($product->category === 'wipe' ? 'bg-gradient-to-br from-blue-50 to-white' : 'bg-gradient-to-br from-amber-50 to-white') }} flex items-center justify-center p-6 group-hover:bg-green-100 transition-colors">
                     @if($product->image_url)
-                        <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                        <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" width="400" height="400" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
                     @else
                     <span class="w-24 h-24 {{ $product->category === 'diaper' ? 'text-green-600' : ($product->category === 'wipe' ? 'text-blue-600' : 'text-amber-600') }} group-hover:scale-110 transition-transform">
                         @include('storefront.partials.icons', ['icon' => $product->category === 'diaper' ? 'diaper' : ($product->category === 'wipe' ? 'wipe' : 'bundle'), 'class' => 'w-full h-full'])

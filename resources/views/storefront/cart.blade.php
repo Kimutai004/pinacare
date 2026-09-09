@@ -1,5 +1,6 @@
 @extends('storefront.layouts.app')
 @section('title', 'Your Cart')
+@section('robots', 'noindex, nofollow')
 
 @section('content')
 <section class="max-w-7xl mx-auto px-4 py-12">
@@ -21,9 +22,9 @@
     @if(count($products) > 0)
     <div class="grid lg:grid-cols-3 gap-8">
         {{-- Items --}}
-        <div class="lg:col-span-2 space-y-4">
+        <div class="lg:col-span-2 space-y-4" id="cartItems">
             @foreach($products as $item)
-            <div class="bg-white rounded-2xl p-5 shadow-sm border border-green-50 flex items-center gap-4 hover:shadow-lg transition">
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-green-50 flex items-center gap-4 hover:shadow-lg transition" data-product-id="{{ $item['product']->id }}" data-product-price="{{ $item['product']->price }}">
 <div class="w-20 h-20 rounded-xl {{ $item['product']->category === 'diaper' ? 'bg-green-50' : ($item['product']->category === 'wipe' ? 'bg-blue-50' : 'bg-amber-50') }} {{ $item['product']->category === 'diaper' ? 'text-green-600' : ($item['product']->category === 'wipe' ? 'text-blue-600' : 'text-amber-600') }} flex items-center justify-center flex-shrink-0 overflow-hidden">
                     @if($item['product']->image_url)
                         <img src="{{ asset($item['product']->image_url) }}" alt="{{ $item['product']->name }}" class="w-full h-full object-cover">
@@ -37,15 +38,13 @@
                     <span class="text-sm text-gray-500">KES {{ number_format($item['product']->price) }} each</span>
                 </div>
                 <div class="flex flex-col items-end gap-2">
-                    <form method="POST" action="{{ route('store.cart.update', $item['product']->id) }}" class="flex items-center gap-2">
-                        @csrf
+                    <div class="flex items-center gap-2">
                         <div class="flex items-center border border-gray-300 rounded-full bg-white">
-                            <button type="button" onclick="this.parentNode.querySelector('input').stepDown();this.parentNode.querySelector('input').dispatchEvent(new Event('change'))" class="px-2.5 py-1 text-gray-600 hover:text-green-700">−</button>
-                            <input type="number" name="qty" value="{{ $item['qty'] }}" min="0" class="w-10 text-center text-sm font-bold border-0 focus:outline-none">
-                            <button type="button" onclick="this.parentNode.querySelector('input').stepUp();this.parentNode.querySelector('input').dispatchEvent(new Event('change'))" class="px-2.5 py-1 text-gray-600 hover:text-green-700">+</button>
+                            <button type="button" class="qty-decrease px-2.5 py-1 text-gray-600 hover:text-green-700">−</button>
+                            <input type="number" class="qty-input w-10 text-center text-sm font-bold border-0 focus:outline-none" value="{{ $item['qty'] }}" min="0" data-original-qty="{{ $item['qty'] }}">
+                            <button type="button" class="qty-increase px-2.5 py-1 text-gray-600 hover:text-green-700">+</button>
                         </div>
-                        <button type="submit" class="text-xs text-green-700 font-bold hover:underline">Update</button>
-                    </form>
+                    </div>
                     <form method="POST" action="{{ route('store.cart.remove', $item['product']->id) }}" onsubmit="return confirm('Remove this item?')">
                         @csrf
                         <button class="text-xs text-red-500 hover:underline inline-flex items-center gap-1">
@@ -55,7 +54,7 @@
                     </form>
                 </div>
                 <div class="text-right w-28">
-                    <p class="font-extrabold text-green-700 text-lg">KES {{ number_format($item['subtotal']) }}</p>
+                    <p class="font-extrabold text-green-700 text-lg cart-subtotal">KES {{ number_format($item['subtotal']) }}</p>
                 </div>
             </div>
             @endforeach
@@ -70,7 +69,7 @@
                 </h2>
                 <div class="space-y-3 text-sm">
                     <div class="flex justify-between text-gray-600">
-                        <span>Subtotal ({{ count($products) }} items)</span><span class="font-bold text-gray-800">KES {{ number_format($total) }}</span>
+                        <span>Subtotal (<span id="cartItemCount">{{ count($products) }}</span> items)</span><span class="font-bold text-gray-800" id="subtotalAmount">KES {{ number_format($total) }}</span>
                     </div>
                     <div class="flex justify-between text-gray-600">
                         <span>Delivery</span><span class="text-green-600 font-bold">Free in Nairobi</span>
@@ -80,7 +79,7 @@
                     </div>
                 </div>
                 <div class="border-t border-gray-200 my-5 pt-5 flex justify-between font-extrabold text-gray-900 text-lg">
-                    <span>Total</span><span>KES {{ number_format($total) }}</span>
+                    <span>Total</span><span id="totalAmount">KES {{ number_format($total) }}</span>
                 </div>
                 <a href="{{ route('store.checkout') }}" class="flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-green-600 text-white font-bold rounded-full hover:bg-green-700 transition shadow flex-1">
                     Proceed to Checkout
@@ -115,6 +114,87 @@
     @endif
 </section>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const cartItems = document.getElementById('cartItems');
+    if (!cartItems) return;
+    
+    // Handle quantity button clicks and updates
+    cartItems.querySelectorAll('[data-product-id]').forEach(item => {
+        const qtyInput = item.querySelector('.qty-input');
+        const decreaseBtn = item.querySelector('.qty-decrease');
+        const increaseBtn = item.querySelector('.qty-increase');
+        const updateBtn = item.querySelector('.qty-update');
+        const productId = item.getAttribute('data-product-id');
+        const productPrice = parseFloat(item.getAttribute('data-product-price'));
+        const subtotalEl = item.querySelector('.cart-subtotal');
+        
+        function updateSubtotal() {
+            const qty = parseInt(qtyInput.value) || 0;
+            const subtotal = qty * productPrice;
+            subtotalEl.textContent = 'KES ' + subtotal.toLocaleString('en-US');
+        }
+        
+        function updateTotal() {
+            let totalAmount = 0;
+            let itemCount = 0;
+            
+            cartItems.querySelectorAll('[data-product-id]').forEach(cartItem => {
+                const qty = parseInt(cartItem.querySelector('.qty-input').value) || 0;
+                const price = parseFloat(cartItem.getAttribute('data-product-price'));
+                if (qty > 0) {
+                    totalAmount += qty * price;
+                    itemCount += qty;
+                }
+            });
+            
+            document.getElementById('subtotalAmount').textContent = 'KES ' + totalAmount.toLocaleString('en-US');
+            document.getElementById('totalAmount').textContent = 'KES ' + totalAmount.toLocaleString('en-US');
+            document.getElementById('cartItemCount').textContent = itemCount;
+        }
+        
+        decreaseBtn.addEventListener('click', () => {
+            const currentQty = parseInt(qtyInput.value) || 0;
+            if (currentQty > 0) {
+                qtyInput.value = currentQty - 1;
+                updateSubtotal();
+                updateTotal();
+            }
+        });
+        
+        increaseBtn.addEventListener('click', () => {
+            qtyInput.value = (parseInt(qtyInput.value) || 0) + 1;
+            updateSubtotal();
+            updateTotal();
+        });
+        
+        updateBtn.addEventListener('click', () => {
+            const qty = qtyInput.value;
+            const updateForm = document.createElement('form');
+            updateForm.method = 'POST';
+            updateForm.action = '{{ route("store.cart.update", "") }}' + '/' + productId;
+            
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = document.querySelector('input[name="_token"]')?.value || '';
+            
+            const qtyInputField = document.createElement('input');
+            qtyInputField.type = 'hidden';
+            qtyInputField.name = 'qty';
+            qtyInputField.value = qty;
+            
+            updateForm.appendChild(csrfInput);
+            updateForm.appendChild(qtyInputField);
+            document.body.appendChild(updateForm);
+            updateForm.submit();
+        });
+    });
+});
+</script>
+@endpush
 
 @push('scripts')
 <script>

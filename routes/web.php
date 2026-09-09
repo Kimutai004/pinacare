@@ -14,6 +14,7 @@ use App\Http\Controllers\StorefrontController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\BlogController as PublicBlogController;
 
 /*
@@ -33,7 +34,10 @@ Route::get('/community', [StorefrontController::class, 'community'])->name('stor
 Route::get('/community/blog/{slug}', [PublicBlogController::class, 'show'])->name('store.blog');
 Route::get('/healthcare', [StorefrontController::class, 'partners'])->name('store.partners');
 Route::get('/contact', [StorefrontController::class, 'contact'])->name('store.contact');
-Route::post('/contact/newsletter', [StorefrontController::class, 'newsletter'])->name('store.newsletter');
+Route::post('/contact/newsletter', [StorefrontController::class, 'newsletter'])->name('store.newsletter')->middleware('throttle:newsletter');
+
+// Sitemap (SEO)
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('store.sitemap');
 
 // Cart
 Route::get('/cart', [CartController::class, 'index'])->name('store.cart');
@@ -45,6 +49,12 @@ Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('store
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('store.checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('store.checkout.store');
 Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('store.checkout.success');
+
+// Payment processing
+Route::post('/payment/mpesa/callback', [CheckoutController::class, 'mpesaCallback'])->name('store.payment.mpesa.callback')->middleware('throttle:payments');
+Route::post('/payment/stripe/callback', [CheckoutController::class, 'stripeCallback'])->name('store.payment.stripe.callback')->middleware('throttle:payments');
+Route::get('/payment/paypal/return', [CheckoutController::class, 'paypalReturn'])->name('store.checkout.paypal.return');
+Route::get('/payment/paypal/cancel', [CheckoutController::class, 'paypalCancel'])->name('store.checkout.paypal.cancel');
 
 
 // ===== Admin Authentication =====

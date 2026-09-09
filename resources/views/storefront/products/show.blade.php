@@ -1,5 +1,7 @@
 @extends('storefront.layouts.app')
 @section('title', $product->name)
+@section('meta_description', \App\Support\Seo::excerpt($product->description ?: $product->name))
+@section('og_image', $product->image_url ? asset($product->image_url) : asset('logo.png'))
 
 @section('content')
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -21,7 +23,7 @@
 <div class="aspect-square {{ $product->category === 'diaper' ? 'bg-gradient-to-br from-green-50 to-emerald-50' : ($product->category === 'wipe' ? 'bg-gradient-to-br from-blue-50 to-cyan-50' : 'bg-gradient-to-br from-amber-50 to-yellow-50') }} rounded-[2rem] flex items-center justify-center border border-{{ $product->category === 'diaper' ? 'green' : ($product->category === 'wipe' ? 'blue' : 'amber') }}-100 shadow-inner relative overflow-hidden">
                 <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/40 blur-sm"></div>
                 @if($product->image_url)
-                    <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                    <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" width="600" height="600" fetchpriority="high" class="w-full h-full object-cover">
                 @else
                 <span class="w-56 h-56 {{ $product->category === 'diaper' ? 'text-green-600' : ($product->category === 'wipe' ? 'text-blue-600' : 'text-amber-600') }} float">
                     @include('storefront.partials.icons', ['icon' => $product->category === 'diaper' ? 'diaper' : ($product->category === 'wipe' ? 'wipe' : 'bundle'), 'class' => 'w-full h-full'])
@@ -85,15 +87,15 @@
             {{-- Actions --}}
             @if($product->stock > 0)
             <div class="mt-8 space-y-4">
-                <form method="POST" action="{{ route('store.cart.add') }}" class="flex items-center gap-4">
+                <form method="POST" action="{{ route('store.cart.add') }}" class="flex items-center gap-4" id="addToCartForm">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <div class="flex items-center border border-gray-300 rounded-full bg-white">
-                        <button type="button" onclick="this.parentNode.querySelector('input').stepDown();this.parentNode.querySelector('input').dispatchEvent(new Event('change'))" class="px-3 py-2 text-gray-600 hover:text-green-700">−</button>
-                        <input type="number" name="qty" value="1" min="1" max="{{ $product->stock }}" class="w-12 text-center text-sm font-bold border-0 focus:outline-none" readonly>
-                        <button type="button" onclick="this.parentNode.querySelector('input').stepUp();this.parentNode.querySelector('input').dispatchEvent(new Event('change'))" class="px-3 py-2 text-gray-600 hover:text-green-700">+</button>
+                        <button type="button" onclick="decreaseQty()" class="px-3 py-2 text-gray-600 hover:text-green-700">−</button>
+                        <input type="number" name="qty" value="1" min="1" max="{{ $product->stock }}" class="w-12 text-center text-sm font-bold border-0 focus:outline-none" readonly id="qtyInput">
+                        <button type="button" onclick="increaseQty()" class="px-3 py-2 text-gray-600 hover:text-green-700">+</button>
                     </div>
-                    <button type="submit" class="flex-1 px-6 py-3.5 bg-green-600 text-white font-bold rounded-full hover:bg-green-700 transition shadow flex items-center justify-center gap-2">
+                    <button type="submit" class="flex-1 px-6 py-3.5 bg-green-600 text-white font-bold rounded-full hover:bg-green-700 transition shadow flex items-center justify-center gap-2" id="addToCartBtn">
                         @include('storefront.partials.icons', ['icon' => 'cart', 'class' => 'w-4 h-4'])
                         Add to Cart — KES {{ number_format($product->price) }}
                     </button>
@@ -133,7 +135,7 @@
                 <!-- Product Image Area -->
                 <div class="relative w-full aspect-square {{ $r->category === 'diaper' ? 'bg-gradient-to-br from-green-50 to-emerald-50' : ($r->category === 'wipe' ? 'bg-gradient-to-br from-blue-50 to-cyan-50' : 'bg-gradient-to-br from-amber-50 to-yellow-50') }} flex items-center justify-center overflow-hidden">
                     @if($r->image_url)
-                        <img src="{{ asset($r->image_url) }}" alt="{{ $r->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                        <img src="{{ asset($r->image_url) }}" alt="{{ $r->name }}" width="400" height="400" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
                     @else
                         <span class="w-32 h-32 {{ $r->category === 'diaper' ? 'text-green-600' : ($r->category === 'wipe' ? 'text-blue-600' : 'text-amber-600') }} group-hover:scale-130 group-hover:rotate-6 transition-transform duration-300">
                             @include('storefront.partials.icons', ['icon' => $r->category === 'diaper' ? 'diaper' : ($r->category === 'wipe' ? 'wipe' : 'bundle'), 'class' => 'w-full h-full'])
@@ -177,6 +179,41 @@
 
 @push('scripts')
 <script>
+    const productPrice = {{ $product->price }};
+    
+    function updateCartButtonAmount() {
+        const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+        const total = productPrice * qty;
+        const formattedTotal = total.toLocaleString('en-US');
+        document.getElementById('addToCartBtn').innerHTML = `
+            @include('storefront.partials.icons', ['icon' => 'cart', 'class' => 'w-4 h-4'])
+            Add to Cart — KES ${formattedTotal}
+        `;
+    }
+    
+    function increaseQty() {
+        const input = document.getElementById('qtyInput');
+        const max = parseInt(input.max);
+        if (parseInt(input.value) < max) {
+            input.value = parseInt(input.value) + 1;
+            updateCartButtonAmount();
+        }
+    }
+    
+    function decreaseQty() {
+        const input = document.getElementById('qtyInput');
+        const min = parseInt(input.min);
+        if (parseInt(input.value) > min) {
+            input.value = parseInt(input.value) - 1;
+            updateCartButtonAmount();
+        }
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateCartButtonAmount();
+    });
+    
     document.getElementById('mobileMenuBtn')?.addEventListener('click', function(){
         document.getElementById('mobileMenu')?.classList.toggle('hidden');
     });

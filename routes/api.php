@@ -40,9 +40,22 @@ Route::get('/blog', [BlogController::class, 'index']);
 Route::get('/blog/{slug}', [BlogController::class, 'show']);
 Route::post('/blog', [BlogController::class, 'store']); // admin only
 
+// Payment Webhooks (without CSRF protection for external providers)
+use App\Http\Controllers\CheckoutController;
 
-// Payments
-Route::post('/payments/mpesa', [PaymentController::class, 'mpesa']);
-Route::post('/payments/stripe', [PaymentController::class, 'stripe']);
-Route::post('/payments/paypal', [PaymentController::class, 'paypal']);
-Route::get('/payments/status/{transaction_id}', [PaymentController::class, 'status']);
+Route::withoutMiddleware(['api'])->group(function () {
+    Route::post('/mpesa/callback', [CheckoutController::class, 'mpesaCallback']);
+    Route::post('/webhooks/stripe', [CheckoutController::class, 'stripeWebhook']);
+    Route::post('/webhooks/paypal', [CheckoutController::class, 'paypalReturn']);
+});
+
+// Payment Status Endpoints
+Route::get('/mpesa/status/{checkoutRequestId}', [CheckoutController::class, 'mpesaStatus']);
+Route::get('/card/status/{paymentIntentId}', [CheckoutController::class, 'cardStatus']);
+
+// Saved Cards Management (authenticated customers only)
+Route::middleware('auth:web')->group(function () {
+    Route::get('/cards/saved', [CheckoutController::class, 'getSavedCards']);
+    Route::delete('/cards/{cardId}', [CheckoutController::class, 'deleteSavedCard']);
+    Route::post('/cards/{cardId}/default', [CheckoutController::class, 'setDefaultCard']);
+});

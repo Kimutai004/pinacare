@@ -1,2 +1,9 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin
+Disallow: /checkout
+Disallow: /cart
+Disallow: /payment/
+
+# Sitemap
+Sitemap: https://pinacare.com/sitemap.xml

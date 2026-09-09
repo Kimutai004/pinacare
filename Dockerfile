@@ -5,7 +5,7 @@ ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN apt-get update \
     && apt-get install -y --no-install-recommends git unzip libpq-dev libzip-dev nodejs npm \
     && docker-php-ext-install pdo_pgsql zip \
-    && a2enmod rewrite \
+    && a2enmod rewrite headers deflate expires \
     && sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf \
     && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf \
     && sed -ri -e 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf \
@@ -21,7 +21,7 @@ RUN composer install --no-dev --no-interaction --prefer-dist --no-scripts
 COPY . .
 RUN composer dump-autoload --no-dev --no-interaction --optimize
 
-COPY package.json vite.config.js ./
+COPY package.json vite.config.js tailwind.config.js ./
 COPY resources ./resources
 RUN npm install && npm run build && rm -rf node_modules
 

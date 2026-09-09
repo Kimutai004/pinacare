@@ -4,40 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Sustainable Baby Care') | PINACARE</title>
-    <link rel="icon" type="image/png" href="{{ asset('logo.png') }}">
-    <link rel="shortcut icon" href="{{ asset('logo.png') }}">
-    <meta name="description" content="PINACARE — where sustainability meets baby care. 100% biodegradable, baby-safe, circular economy diapers and wipes.">
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    @php
+        // ===== SEO metadata (page-overridable) =====
+        $seoPageTitle   = view()->hasSection('title') ? trim(view()->yieldContent('title')) : '';
+        $seoTitle       = ($seoPageTitle === '' ? 'Sustainable Baby Care' : $seoPageTitle) . ' | PINACARE';
+        $seoDescription = trim(view()->yieldContent('meta_description', 'PINACARE — where sustainability meets baby care. 100% biodegradable, baby-safe, circular economy diapers and wipes.'));
+        $seoKeywords    = trim(view()->yieldContent('meta_keywords', 'biodegradable diapers, baby wipes, eco-friendly baby care, sustainable nappies, circular economy, baby care Kenya'));
+        $seoCanonical   = view()->hasSection('canonical') ? trim(view()->yieldContent('canonical')) : request()->fullUrl();
+        $seoRobots      = trim(view()->yieldContent('robots', 'index, follow, max-image-preview:large'));
+        $seoOgType      = trim(view()->yieldContent('og_type', 'website'));
+        $seoOgTitle     = view()->hasSection('og_title') ? trim(view()->yieldContent('og_title')) : $seoTitle;
+        $siteLogo       = asset('logo.png');
+        if (! str_starts_with($siteLogo, 'http')) {
+            $siteLogo = request()->schemeAndHttpHost() . $siteLogo;
+        }
+        $seoOgImage     = view()->hasSection('og_image') ? trim(view()->yieldContent('og_image')) : $siteLogo;
+        $siteRoot       = request()->root();
+    @endphp
+
+    <title>{{ $seoTitle }}</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+
+    {{-- ===== SEO: description / keywords / robots / canonical ===== --}}
+    <meta name="description" content="{{ $seoDescription }}">
+    <meta name="keywords" content="{{ $seoKeywords }}">
+    <meta name="robots" content="{{ $seoRobots }}">
+    <meta name="author" content="PINACARE">
+    <meta name="theme-color" content="#0b3d2e">
+    <link rel="canonical" href="{{ $seoCanonical }}">
+
+    {{-- ===== Open Graph ===== --}}
+    <meta property="og:site_name" content="PINACARE">
+    <meta property="og:type" content="{{ $seoOgType }}">
+    <meta property="og:title" content="{{ $seoOgTitle }}">
+    <meta property="og:description" content="{{ $seoDescription }}">
+    <meta property="og:url" content="{{ $seoCanonical }}">
+    <meta property="og:image" content="{{ $seoOgImage }}">
+    <meta property="og:locale" content="en_US">
+
+    {{-- ===== Twitter / X cards ===== --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $seoOgTitle }}">
+    <meta name="twitter:description" content="{{ $seoDescription }}">
+    <meta name="twitter:image" content="{{ $seoOgImage }}">
+
+    {{-- ===== Structured data: Organization + WebSite (site-wide) ===== --}}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Organization",
+                "@id": "{{ $siteRoot }}#organization",
+                "name": "PINACARE",
+                "url": "{{ $siteRoot }}",
+                "logo": "{{ $siteLogo }}",
+                "sameAs": [
+                    "https://www.facebook.com/share/1JikxbVgyW",
+                    "https://x.com/pinacarelimited"
+                ]
+            },
+            {
+                "@type": "WebSite",
+                "@id": "{{ $siteRoot }}#website",
+                "name": "PINACARE",
+                "url": "{{ $siteRoot }}"
+            }
+        ]
+    }
+    </script>
+
+    {{-- Page-specific structured data (Product / Article / BreadcrumbList) --}}
+    @isset($pageJsonLd)
+    <script type="application/ld+json">
+{!! $pageJsonLd !!}
+    </script>
+    @endisset
+
+    {{-- Performance: compiled Tailwind CSS (replaces the Tailwind CDN) --}}
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+    {{-- Webfonts: preconnect + display=swap to avoid flash-of-invisible-text --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Nunito', sans-serif; }
-        .loader-hidden { opacity: 0; visibility: hidden; transition: opacity 30s ease; }
-        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-        .float { animation: float 30s ease-in-out infinite; }
-        @keyframes spin-slow { to { transform: rotate(360deg); } }
-        .spin-slow { animation: spin-slow 2.5s linear infinite; }
-    </style>
+
+    @stack('head')
 </head>
 <body class="bg-green-50 bg-[#faf8f3] text-gray-800 antialiased">
-
-    <!-- ===== Full-page Loader ===== -->
-    <div id="pageLoader" class="fixed inset-0 z-[100] bg-green-800 flex flex-col items-center justify-center space-y-5">
-        <div class="relative w-24 h-24 float">
-            <div class="absolute inset-0 rounded-full border-4 border-green-200"></div>
-            <div class="absolute inset-0 rounded-full border-4 border-t-green-600 border-green-200 spin-slow"></div>
-            <div class="absolute inset-0 flex items-center justify-center">
-                <img src="{{ asset('logo.png') }}" alt="PINACARE Logo" class="w-32 h-auto mx-auto mb-2">
-            </div>
-        </div>
-        <div class="text-center">
-            <p class="text-sm text-white mt-1">Where Sustainability Meets Baby Care</p>
-        </div>
-        <div class="w-48 h-1.5 bg-green-100 rounded-full overflow-hidden">
-            <div class="h-full bg-green-500 rounded-full progress-bar" style="width:0%"></div>
-        </div>
-    </div>
 
     @include('storefront.partials.navbar')
 
@@ -71,22 +129,6 @@
 
     @include('storefront.partials.footer')
 
-    <script>
-        window.addEventListener('load', function () {
-            const loader = document.getElementById('pageLoader');
-            const bar = document.querySelector('.progress-bar');
-            if (bar) bar.style.width = '100%';
-            setTimeout(function () {
-                if (loader) loader.classList.add('loader-hidden');
-                setTimeout(function () { if (loader) loader.remove(); }, 600);
-            }, 700);
-        });
-        // Fallback in case load already fired
-        setTimeout(function () {
-            const loader = document.getElementById('pageLoader');
-            if (loader) { loader.classList.add('loader-hidden'); setTimeout(function () { loader.remove(); }, 600); }
-        }, 3000);
-    </script>
     @stack('scripts')
 </body>
 </html>

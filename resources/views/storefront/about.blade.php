@@ -1,5 +1,6 @@
 @extends('storefront.layouts.app')
 @section('title', 'About Us')
+@section('meta_description', 'Learn about PINACARE\'s mission to build a circular economy for baby care — from pineapple leaf harvest to 100% biodegradable diapers. Our story, vision and values.')
 
 @section('content')
 {{-- ===== 1. HERO — Watercolor story banner with wave ===== --}}

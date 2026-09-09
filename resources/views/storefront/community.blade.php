@@ -1,5 +1,6 @@
 @extends('storefront.layouts.app')
 @section('title', 'Community')
+@section('meta_description', 'Join the PINACARE community — read our eco-parenting blog, share your story, and subscribe for sustainable baby care tips delivered to your inbox.')
 
 @section('content')
 {{-- ===== 1. HERO ===== --}}
@@ -56,6 +57,12 @@
                 @empty
                 <p class="text-gray-500">No blog posts yet. Check back soon!</p>
                 @endforelse
+
+                @if($posts->hasPages())
+                <div class="mt-8">
+                    {{ $posts->links() }}
+                </div>
+                @endif
             </div>
 
             {{-- Testimonials --}}

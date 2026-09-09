@@ -16,7 +16,7 @@ services:
       - key: APP_KEY
         sync: false
       - key: APP_URL
-        value: https://pinacare.onrender.com
+        value: https://pinacare.com
       - key: LOG_CHANNEL
         value: stderr
       - key: LOG_LEVEL
