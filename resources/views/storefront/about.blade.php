@@ -94,39 +94,215 @@
     </div>
 </section>
 
-{{-- ===== 4. SDG CONTRIBUTION — Gradient cards ===== --}}
+
+{{-- ===== 4. SDG CONTRIBUTION — Lively SDG Cards ===== --}}
 <section class="py-16 md:py-24 bg-green-50/50">
     <div class="max-w-6xl mx-auto px-4">
+
+        {{-- Section Header --}}
         <div class="text-center mb-12">
-            <span class="inline-block px-4 py-1.5 bg-white text-green-700 text-xs font-extrabold tracking-widest uppercase rounded-full border border-green-200 mb-5">Global Goals</span>
-            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">Our Contribution to the SDGs</h2>
-            <p class="text-gray-600 mt-3 text-lg">Aligned with the United Nations Sustainable Development Goals</p>
+
+            <span class="inline-flex items-center gap-2 px-4 py-1.5
+                         bg-white text-green-700 text-xs font-extrabold
+                         tracking-widest uppercase rounded-full
+                         border border-green-200 mb-5 shadow-sm">
+
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+
+                Global Goals
+            </span>
+
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">
+                Our Contribution to the SDGs
+            </h2>
+
+            <p class="text-gray-600 mt-3 text-lg max-w-2xl mx-auto">
+                Aligned with the United Nations Sustainable Development Goals
+            </p>
         </div>
 
+        @php
+            $sdgs = [
+                [
+                    'num' => '03',
+                    'title' => 'Good Health & Well-Being',
+                    'desc' => 'Dermatologist-tested, hypoallergenic products keep babies healthy and rash-free.',
+                    'icon' => '♥',
+                ],
+                [
+                    'num' => '09',
+                    'title' => 'Industry, Innovation & Infrastructure',
+                    'desc' => 'Sustainable manufacturing and innovative biodegradable materials built on local expertise.',
+                    'icon' => '⚙',
+                ],
+                [
+                    'num' => '12',
+                    'title' => 'Responsible Consumption & Production',
+                    'desc' => '100% biodegradable materials reduce landfill waste and promote circular consumption.',
+                    'icon' => '♻',
+                ],
+                [
+                    'num' => '13',
+                    'title' => 'Climate Action',
+                    'desc' => 'Reduced carbon emissions through sustainable sourcing and local production.',
+                    'icon' => '◉',
+                ],
+                [
+                    'num' => '15',
+                    'title' => 'Life on Land',
+                    'desc' => 'Pineapple leaf fibre sourcing supports sustainable agriculture and biodiversity conservation.',
+                    'icon' => '♧',
+                ],
+            ];
+        @endphp
+
+        {{-- SDG Cards --}}
         <div class="grid md:grid-cols-3 gap-7">
-            @php
-                $sdgs = [
-                    ['num' => '3', 'title' => 'Good Health & Well-Being', 'desc' => 'Dermatologist-tested, hypoallergenic products keep babies healthy and rash-free.', 'grad' => 'from-red-500 to-rose-600', 'icon' => 'heart'],
-                    ['num' => '12', 'title' => 'Responsible Consumption', 'desc' => 'Biodegradable materials reduce landfill waste and promote circular consumption.', 'grad' => 'from-green-500 to-emerald-600', 'icon' => 'recycle'],
-                    ['num' => '13', 'title' => 'Climate Action', 'desc' => 'Reduced carbon emissions through sustainable sourcing and local production.', 'grad' => 'from-blue-500 to-cyan-600', 'icon' => 'globe'],
-                ];
-            @endphp
-            @foreach($sdgs as $sdg)
-            <div class="group relative bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r {{ $sdg['grad'] }}"></div>
-                <div class="p-8">
-                    <div class="flex items-center justify-between">
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br {{ $sdg['grad'] }} text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                            <span class="w-8 h-8">@include('storefront.partials.icons', ['icon' => $sdg['icon'], 'class' => 'w-full h-full'])</span>
-                        </div>
-                        <span class="inline-flex items-center justify-center w-12 h-12 rounded-full {{ $sdg['grad'] }} text-white font-extrabold text-lg shadow">{{ $sdg['num'] }}</span>
-                    </div>
-                    <h3 class="font-extrabold text-gray-900 text-xl mt-5">{{ $sdg['title'] }}</h3>
-                    <p class="text-gray-600 mt-3 leading-relaxed">{{ $sdg['desc'] }}</p>
+
+            @foreach($sdgs as $index => $sdg)
+
+            <div
+                class="group relative bg-white rounded-3xl overflow-hidden
+                       border border-transparent
+                       shadow-sm hover:shadow-2xl
+                       hover:border-green-200
+                       transition-all duration-500
+                       hover:-translate-y-2
+                       {{ $index === 3 ? 'md:col-start-1' : '' }}"
+            >
+
+                {{-- Animated Green Accent --}}
+                <div class="absolute top-0 left-0 w-full h-1 bg-green-600
+                            transform scale-x-0 origin-left
+                            group-hover:scale-x-100
+                            transition-transform duration-500">
                 </div>
+
+                <div class="p-8">
+
+                    {{-- Top Row --}}
+                    <div class="flex items-start justify-between">
+
+                        {{-- SDG Number --}}
+                        <div class="relative">
+
+                            <div class="w-16 h-16 rounded-2xl
+                                        bg-gray-900 text-white
+                                        flex flex-col items-center justify-center
+                                        shadow-lg
+                                        group-hover:bg-green-700
+                                        group-hover:rotate-3
+                                        transition-all duration-500">
+
+                                <span class="text-[9px] font-bold tracking-[0.2em] uppercase opacity-60">
+                                    SDG
+                                </span>
+
+                                <span class="text-2xl font-black leading-none mt-0.5">
+                                    {{ $sdg['num'] }}
+                                </span>
+
+                            </div>
+
+                            {{-- Small Decorative Dot --}}
+                            <span class="absolute -top-1 -right-1
+                                         w-3 h-3 rounded-full bg-green-500
+                                         opacity-0 scale-0
+                                         group-hover:opacity-100
+                                         group-hover:scale-100
+                                         transition-all duration-500">
+                            </span>
+
+                        </div>
+
+                        {{-- Icon --}}
+                        <div class="w-14 h-14 rounded-2xl
+                                    bg-green-50
+                                    border border-green-100
+                                    flex items-center justify-center
+                                    text-2xl text-green-700
+                                    group-hover:bg-green-100
+                                    group-hover:scale-110
+                                    group-hover:-rotate-6
+                                    transition-all duration-500">
+
+                            <span class="group-hover:scale-110 transition-transform duration-300">
+                                {{ $sdg['icon'] }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    {{-- Content --}}
+                    <div class="mt-6">
+
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-[10px] font-bold uppercase
+                                         tracking-[0.18em] text-green-600">
+                                Sustainable Development Goal
+                            </span>
+                        </div>
+
+                        <h3 class="font-extrabold text-gray-900 text-xl
+                                   leading-snug
+                                   group-hover:text-green-700
+                                   transition-colors duration-300">
+                            {{ $sdg['title'] }}
+                        </h3>
+
+                        <p class="text-gray-600 mt-3 leading-relaxed">
+                            {{ $sdg['desc'] }}
+                        </p>
+
+                    </div>
+
+                    {{-- Bottom Arrow --}}
+                    <div class="mt-6 flex items-center gap-2
+                                text-sm font-bold text-gray-400
+                                group-hover:text-green-700
+                                transition-colors duration-300">
+
+                        <span>Our impact</span>
+
+                        <span class="transform translate-x-0
+                                     group-hover:translate-x-2
+                                     transition-transform duration-300">
+                            →
+                        </span>
+
+                    </div>
+
+                </div>
+
             </div>
+
             @endforeach
+
         </div>
+
+        {{-- Bottom Statement --}}
+        <div class="mt-12 text-center">
+
+            <div class="inline-flex items-center gap-3
+                        bg-white rounded-full
+                        border border-green-100
+                        px-5 py-3 shadow-sm">
+
+                <span class="flex items-center justify-center
+                             w-7 h-7 rounded-full
+                             bg-green-100 text-green-700 text-sm">
+                    ✓
+                </span>
+
+                <span class="text-sm font-semibold text-gray-600">
+                    Creating positive impact through sustainable innovation
+                </span>
+
+            </div>
+
+        </div>
+
     </div>
 </section>
 
