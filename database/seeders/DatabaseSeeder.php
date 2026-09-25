@@ -111,15 +111,47 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        // Additional reviewers (idempotent by email) — keeps reviewer names unique
+        $serena = Customer::firstOrCreate(
+            ['email' => 'serena@example.com'],
+            [
+                'name'    => 'SERENA',
+                'phone'   => '+254722334455',
+                'address' => 'Mombasa, Kenya',
+            ]
+        );
+
+        $faith = Customer::firstOrCreate(
+            ['email' => 'faith@example.com'],
+            [
+                'name'    => 'Faith Njeri',
+                'phone'   => '+254733445566',
+                'address' => 'Kisumu, Kenya',
+            ]
+        );
+
         // Testimonials (idempotent by content)
-        Testimonial::firstOrCreate(
+        $janeReview = Testimonial::firstOrCreate(
             ['content' => 'These eco diapers are amazing! My baby\'s skin is so much better and they are truly biodegradable.'],
             ['customer_id' => $customer->id, 'rating' => 5, 'approved' => true]
         );
-        Testimonial::firstOrCreate(
+
+        // Replaces the duplicate "Jane Mwangi" review with SERENA
+        $serenaReview = Testimonial::firstOrCreate(
             ['content' => 'Great quality and fast delivery. Highly recommend to every parent!'],
-            ['customer_id' => $customer->id, 'rating' => 4, 'approved' => false]
+            ['customer_id' => $serena->id, 'rating' => 4, 'approved' => true]
         );
+
+        // Extra reviewer so the homepage "Loved by Parents Across Kenya" carousel shows a different name
+        $faithReview = Testimonial::firstOrCreate(
+            ['content' => 'Switching to PINACARE was the best decision for our family — soft, absorbent and truly biodegradable nappies.'],
+            ['customer_id' => $faith->id, 'rating' => 5, 'approved' => true]
+        );
+
+        // Self-heal rows created before this seed ran (keeps re-seeding idempotent)
+        $janeReview->update(['customer_id' => $customer->id, 'approved' => true]);
+        $serenaReview->update(['customer_id' => $serena->id, 'approved' => true]);
+        $faithReview->update(['customer_id' => $faith->id, 'approved' => true]);
 
         // Blog post (idempotent by slug)
         BlogPost::firstOrCreate(

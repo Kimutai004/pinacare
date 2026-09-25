@@ -6,6 +6,7 @@ use App\Models\BlogPost;
 use App\Models\ImpactMetric;
 use App\Models\Product;
 use App\Models\Testimonial;
+use App\Support\Seo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -44,11 +45,83 @@ class StorefrontController extends Controller
     }
 
     /**
-     * About Us page.
+     * About Us page: story, vision & mission, live impact numbers and FAQs.
      */
     public function about()
     {
-        return view('storefront.about');
+        $impact = Cache::remember('storefront.about.impact', 900, function () {
+            return ImpactMetric::latest()->first();
+        });
+
+        // Single source of truth: rendered in the FAQ accordion AND used for FAQPage JSON-LD.
+        $faqs = [
+            [
+                'q' => 'What are PINACARE diapers made from?',
+                'a' => 'Pineapple leaf fibre. Leaves left over after the pineapple harvest are collected from local farms and processed into a soft, absorbent natural fibre without harmful chemicals, then crafted into our biodegradable diapers and wipes.',
+            ],
+            [
+                'q' => 'Are PINACARE products safe for newborn skin?',
+                'a' => 'Yes. Our range is dermatologist-tested, hypoallergenic and free from harsh chemicals, so it is gentle enough for delicate newborn skin and helps reduce the risk of nappy rash.',
+            ],
+            [
+                'q' => 'What happens to a PINACARE diaper after use?',
+                'a' => 'It is compostable. Because the materials are plant-based, a used diaper breaks down naturally and returns to the soil, completing the circular loop instead of sitting in a landfill.',
+            ],
+            [
+                'q' => 'Where do you deliver and what does delivery cost?',
+                'a' => 'Delivery is FREE within Nairobi. Other regions in Kenya and East Africa are charged a flat rate based on location.',
+            ],
+            [
+                'q' => 'Can I have my order delivered every month?',
+                'a' => 'Yes. Choose "Subscribe & Save" at checkout for automatic monthly deliveries at a 15% discount. You can pause or cancel anytime.',
+            ],
+            [
+                'q' => 'How does PINACARE support farmers and the circular economy?',
+                'a' => 'We buy pineapple leaves that would otherwise go to waste, pay fair wages and create green jobs for rural farming communities, then turn that agricultural waste into affordable, biodegradable baby care.',
+            ],
+            [
+                'q' => 'How can my clinic, pharmacy or business partner with PINACARE?',
+                'a' => 'We work with pediatricians, hospitals, maternal clinics and retailers across East Africa. Visit our Healthcare Partnerships page or contact our team to start a conversation.',
+            ],
+        ];
+
+        $aboutUrl = route('store.about');
+
+        $pageJsonLd = Seo::graph([
+            [
+                '@type'              => 'AboutPage',
+                '@id'                => $aboutUrl . '#aboutpage',
+                'url'                => $aboutUrl,
+                'name'               => 'About PINACARE',
+                'description'        => Seo::excerpt('PINACARE turns pineapple leaf fibre into 100% biodegradable, hypoallergenic baby diapers and wipes that protect babies, empower farmers and keep waste out of landfill.'),
+                'isPartOf'           => ['@type' => 'WebSite', '@id' => request()->root() . '#website'],
+                'about'              => ['@type' => 'Organization', '@id' => request()->root() . '#organization'],
+                'primaryImageOfPage' => [
+                    '@type' => 'ImageObject',
+                    'url'   => Seo::absolute(asset('pinacare.jpeg')),
+                ],
+            ],
+            [
+                '@type'           => 'BreadcrumbList',
+                'itemListElement' => [
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => request()->root()],
+                    ['@type' => 'ListItem', 'position' => 2, 'name' => 'About Us', 'item' => $aboutUrl],
+                ],
+            ],
+            [
+                '@type'      => 'FAQPage',
+                '@id'        => $aboutUrl . '#faq',
+                'mainEntity' => array_map(function (array $faq) {
+                    return [
+                        '@type'          => 'Question',
+                        'name'           => $faq['q'],
+                        'acceptedAnswer' => ['@type' => 'Answer', 'text' => $faq['a']],
+                    ];
+                }, $faqs),
+            ],
+        ]);
+
+        return view('storefront.about', compact('impact', 'faqs', 'pageJsonLd'));
     }
 
     /**

@@ -147,9 +147,23 @@
         <span class="inline-block px-4 py-1.5 bg-green-100 text-green-700 text-xs font-extrabold tracking-widest uppercase rounded-full mb-5">Stay Connected</span>
         <h2 class="text-3xl font-extrabold text-gray-900">Follow Us</h2>
         <p class="text-gray-600 mt-2">Join our growing community of eco-conscious parents.</p>
-        <div class="flex justify-center gap-4 mt-8">
-            @foreach(['facebook','x','instagram','whatsapp'] as $social)
-            <a href="#" class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-600 to-emerald-700 text-white flex items-center justify-center hover:scale-110 hover:shadow-xl transition-all duration-300" aria-label="{{ ucfirst($social) }}">
+        <div class="flex justify-center flex-wrap gap-4 mt-8">
+            @php
+                $socialLinks = [
+                    'facebook'  => ['label' => 'Facebook',    'url' => 'https://www.facebook.com/share/1JikxbVgyW/?mibextid=wwXIfr'],
+                    'x'         => ['label' => 'X (Twitter)', 'url' => 'https://x.com/pinacarelimited?s=11'],
+                    'instagram' => ['label' => 'Instagram',   'url' => 'https://www.instagram.com/pinacarelimited?igsi=MXJsdW9tbnU5Z3poNA=='],
+                    'whatsapp'  => ['label' => 'WhatsApp',    'url' => 'https://wa.me/254751340591'],
+                    'linkedin'  => ['label' => 'LinkedIn',    'url' => 'https://www.linkedin.com/company/pinacarelimited/'],
+                ];
+            @endphp
+            @foreach($socialLinks as $social => $meta)
+            <a href="{{ $meta['url'] }}"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-600 to-emerald-700 text-white flex items-center justify-center hover:scale-110 hover:shadow-xl transition-all duration-300"
+               aria-label="{{ $meta['label'] }}"
+               title="{{ $meta['label'] }}">
                 @include('storefront.partials.icons', ['icon' => $social, 'class' => 'w-7 h-7'])
             </a>
             @endforeach

@@ -78,6 +78,9 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('products', 'public');
             $data['image_url'] = '/storage/' . $path;
+        } elseif ($data['image_url'] === null || $data['image_url'] === '') {
+            // No new photo chosen - keep the existing photo.
+            unset($data['image_url']);
         }
 
         $product->update($data);

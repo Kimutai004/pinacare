@@ -65,7 +65,9 @@
                 "logo": "{{ $siteLogo }}",
                 "sameAs": [
                     "https://www.facebook.com/share/1JikxbVgyW",
-                    "https://x.com/pinacarelimited"
+                    "https://x.com/pinacarelimited",
+                    "https://www.instagram.com/pinacarelimited",
+                    "https://www.linkedin.com/company/pinacarelimited/"
                 ]
             },
             {
