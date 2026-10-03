@@ -39,6 +39,10 @@ Route::post('/contact/newsletter', [StorefrontController::class, 'newsletter'])-
 // Sitemap (SEO)
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('store.sitemap');
 
+// Uploaded product photos are streamed through PHP so they work regardless of
+// whether the host exposes /storage via a `storage:link` symlink.
+Route::get('/media/products/{filename}', [ShopController::class, 'productImage'])->name('products.image');
+
 // Cart
 Route::get('/cart', [CartController::class, 'index'])->name('store.cart');
 Route::post('/cart/add', [CartController::class, 'add'])->name('store.cart.add');

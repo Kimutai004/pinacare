@@ -35,7 +35,6 @@ class ProductController extends Controller
             'stock'       => 'required|integer|min:0',
             'description' => 'nullable|string',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'image_url'   => 'nullable|url',
             'is_active'   => 'sometimes|boolean',
         ]);
 
@@ -44,8 +43,10 @@ class ProductController extends Controller
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('products', 'public');
-            $data['image_url'] = '/storage/' . $path;
+            $data['image_url'] = '/media/products/'.basename($path);
         }
+
+        unset($data['image']);
 
         Product::create($data);
 
@@ -68,20 +69,19 @@ class ProductController extends Controller
             'stock'       => 'required|integer|min:0',
             'description' => 'nullable|string',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'image_url'   => 'nullable|url',
             'is_active'   => 'sometimes|boolean',
         ]);
 
         $data['is_active'] = $request->boolean('is_active');
         $data['slug']      = Product::uniqueSlug($request->name, $product->id);
 
+        // The existing photo is always preserved unless a new file is uploaded.
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('products', 'public');
-            $data['image_url'] = '/storage/' . $path;
-        } elseif ($data['image_url'] === null || $data['image_url'] === '') {
-            // No new photo chosen - keep the existing photo.
-            unset($data['image_url']);
+            $data['image_url'] = '/media/products/'.basename($path);
         }
+
+        unset($data['image']);
 
         $product->update($data);
 

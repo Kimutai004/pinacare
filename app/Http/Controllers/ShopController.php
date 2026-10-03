@@ -6,6 +6,9 @@ use App\Models\Product;
 use App\Support\Seo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class ShopController extends Controller
 {
@@ -80,6 +83,58 @@ class ShopController extends Controller
 
         return view('storefront.products.show', compact('product', 'related'))
             ->with('pageJsonLd', Seo::product($product));
+    }
+
+    /**
+     * Serve an uploaded product photo straight from the storage disk.
+     *
+     * Uploaded images live in storage/app/public/products, but whether that
+     * folder is reachable over the web depends entirely on how the site is
+     * hosted: Laravel's `storage:link` symlink makes `/storage/...` work,
+     * while hosts whose document root is the project folder (e.g. cPanel's
+     * public_html) expose no such alias and every /storage/... request 404s.
+     *
+     * Routing the request through PHP removes that dependency - Laravel always
+     * knows its own storage path - so the same stored path works on every host.
+     *
+     * @param  string  $filename  Stored filename, e.g. "abc123.png"
+     */
+    public function productImage(string $filename)
+    {
+        // Strip any directory components: only ever serve from the products
+        // folder, never let a crafted name traverse out of it.
+        $filename = basename($filename);
+
+        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+        $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+        if (! in_array($extension, $allowed, true)) {
+            abort(404);
+        }
+
+        $disk = Storage::disk('public');
+        $path = 'products/'.$filename;
+
+        if (! $disk->exists($path)) {
+            abort(404);
+        }
+
+        $mime = $disk->mimeType($path) ?: 'application/octet-stream';
+
+        $response = new BinaryFileResponse(
+            $disk->path($path),
+            200,
+            ['Content-Type' => $mime]
+        );
+
+        // Filenames are content-hashed on upload, so they are safe to cache hard.
+        $response->setPublic();
+        $response->setMaxAge(31536000);
+        $response->setImmutable();
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE, '', basename($path));
+
+        return $response;
     }
 }
 

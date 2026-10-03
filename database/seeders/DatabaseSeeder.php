@@ -4,14 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Admin;
 use App\Models\BlogPost;
-use App\Models\Customer;
 use App\Models\ImpactMetric;
-use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\Payment;
 use App\Models\Product;
-use App\Models\Subscription;
-use App\Models\Testimonial;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -53,54 +47,8 @@ class DatabaseSeeder extends Seeder
             $products[] = $product;
         }
 
-        // Customer (idempotent by email)
-        $customer = Customer::firstOrCreate(
-            ['email' => 'jane@example.com'],
-            [
-                'name'    => 'Jane Mwangi',
-                'phone'   => '+254712345678',
-                'address' => 'Nairobi, Kenya',
-            ]
-        );
-
-        // Only create sample order if the customer has none yet
-        if ($customer->orders()->count() === 0) {
-            $order = Order::create([
-                'customer_id'    => $customer->id,
-                'total_amount'   => 2550,
-                'status'         => 'delivered',
-                'payment_method' => 'mpesa',
-            ]);
-
-            OrderItem::create([
-                'order_id'   => $order->id,
-                'product_id' => $products[0]->id,
-                'quantity'   => 1,
-                'price'      => 1200,
-            ]);
-            OrderItem::create([
-                'order_id'   => $order->id,
-                'product_id' => $products[3]->id,
-                'quantity'   => 3,
-                'price'      => 450,
-            ]);
-
-            Payment::create([
-                'order_id'        => $order->id,
-                'transaction_id'  => 'MPESA'.time(),
-                'amount'          => 2550,
-                'status'          => 'success',
-                'payment_gateway' => 'mpesa',
-            ]);
-
-            Subscription::create([
-                'customer_id'        => $customer->id,
-                'product_id'         => $products[0]->id,
-                'frequency'          => 'weekly',
-                'next_delivery_date' => now()->addWeek(),
-                'status'             => 'active',
-            ]);
-        }
+        // Customers, orders, subscriptions and testimonials (idempotent)
+        $this->call(CustomerSeeder::class);
 
         // Impact metrics (single row, idempotent)
         if (ImpactMetric::count() === 0) {
@@ -110,48 +58,6 @@ class DatabaseSeeder extends Seeder
                 'farmers_supported' => 500,
             ]);
         }
-
-        // Additional reviewers (idempotent by email) — keeps reviewer names unique
-        $serena = Customer::firstOrCreate(
-            ['email' => 'serena@example.com'],
-            [
-                'name'    => 'SERENA',
-                'phone'   => '+254722334455',
-                'address' => 'Mombasa, Kenya',
-            ]
-        );
-
-        $faith = Customer::firstOrCreate(
-            ['email' => 'faith@example.com'],
-            [
-                'name'    => 'Faith Njeri',
-                'phone'   => '+254733445566',
-                'address' => 'Kisumu, Kenya',
-            ]
-        );
-
-        // Testimonials (idempotent by content)
-        $janeReview = Testimonial::firstOrCreate(
-            ['content' => 'These eco diapers are amazing! My baby\'s skin is so much better and they are truly biodegradable.'],
-            ['customer_id' => $customer->id, 'rating' => 5, 'approved' => true]
-        );
-
-        // Replaces the duplicate "Jane Mwangi" review with SERENA
-        $serenaReview = Testimonial::firstOrCreate(
-            ['content' => 'Great quality and fast delivery. Highly recommend to every parent!'],
-            ['customer_id' => $serena->id, 'rating' => 4, 'approved' => true]
-        );
-
-        // Extra reviewer so the homepage "Loved by Parents Across Kenya" carousel shows a different name
-        $faithReview = Testimonial::firstOrCreate(
-            ['content' => 'Switching to PINACARE was the best decision for our family — soft, absorbent and truly biodegradable nappies.'],
-            ['customer_id' => $faith->id, 'rating' => 5, 'approved' => true]
-        );
-
-        // Self-heal rows created before this seed ran (keeps re-seeding idempotent)
-        $janeReview->update(['customer_id' => $customer->id, 'approved' => true]);
-        $serenaReview->update(['customer_id' => $serena->id, 'approved' => true]);
-        $faithReview->update(['customer_id' => $faith->id, 'approved' => true]);
 
         // Blog post (idempotent by slug)
         BlogPost::firstOrCreate(

@@ -57,12 +57,25 @@
                     <tr>
 <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
-                                @if($product->image_url)
-                                    <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" class="w-11 h-11 rounded-lg object-cover border border-gray-200">
-                                @else
-                                    <span class="w-11 h-11 rounded-lg bg-green-50 text-green-600 flex items-center justify-center text-sm font-bold">{{ strtoupper(substr($product->name, 0, 1)) }}</span>
-                                @endif
-                                <span class="text-sm text-gray-700">{{ $product->name }}</span>
+                                <div class="w-11 h-11 shrink-0 relative">
+                                    @if($product->image_url)
+                                        {{-- If the file is missing on the server, fall back to the
+                                             initials badge instead of showing a broken image. --}}
+                                        <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}"
+                                             loading="lazy" decoding="async"
+                                             onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');"
+                                             class="{{ $product->image_url ? '' : 'hidden' }} w-11 h-11 rounded-lg object-cover border border-gray-200">
+                                    @endif
+                                    <span class="{{ $product->image_url ? 'hidden' : '' }} w-11 h-11 rounded-lg bg-green-50 text-green-600 flex items-center justify-center text-sm font-bold">
+                                        {{ strtoupper(substr($product->name, 0, 1)) }}
+                                    </span>
+                                </div>
+                                <div class="min-w-0">
+                                    <span class="block text-sm text-gray-700 truncate">{{ $product->name }}</span>
+                                    @if($product->image_url && str_starts_with($product->image_url, '/media/products/') && ! \Illuminate\Support\Facades\Storage::disk('public')->exists('products/'.basename($product->image_url)))
+                                        <span class="text-xs text-amber-600" title="This photo is not present on the server. Re-upload it from the Edit page.">photo missing on server</span>
+                                    @endif
+                                </div>
                             </div>
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-700">{{ ucfirst($product->category) }}</td>
